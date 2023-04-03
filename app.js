@@ -6,7 +6,6 @@ const MongoStore = require('connect-mongo');
 
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
-const bcrypt = require('bcrypt');
 
 //COSTANTI APP
 
