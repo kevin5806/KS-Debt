@@ -1,0 +1,279 @@
+@import url(reset.css);
+@import url(font.css);
+
+:root {
+    --clr-primary: rgb(0, 0, 0); /* text color */
+    --clr-accent: rgb(174, 98, 255); /* mid color */
+    --clr-neutral: rgb(255, 255, 255); /* back color */
+
+    --ff-primary: 'Roboto';
+    --ff-secondary: 'Varela Round', sans-serif; /* usato nel conteggio soldi */
+    --ff-terz: 'milky', sans-serif;
+
+    --fw-light: 200;
+    --fw-normal: 400;
+    --fw-medium: 600;
+    --fw-hard: 800;
+
+    --fs-small: 1em;
+    --fs-medium: 1.5em;
+    --fs-big: 2em;
+    --fs-mega-big: 2.5em;
+    
+    --fs-title: 3.3em;
+}
+
+h1 { font-size: var(--fs-title)   ;}
+h2 { font-size: var(--fs-mega-big);}
+h3 { font-size: var(--fs-big)     ;}
+h4 { font-size: var(--fs-medium)  ;}
+h5 { font-size: var(--fs-small)   ;}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--ff-primary);
+}
+
+/* scroll bar */
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    border: solid rgba(178, 178, 178, 0.6) 2px;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(195, 195, 195);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(152, 152, 152);
+}
+
+.red {
+    color: rgb(204, 61, 43);
+}
+
+.green {
+    color: rgb(104, 212, 32);
+}
+
+.none {
+    display: none !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    background-color: rgb(246, 246, 248);
+    border-bottom: 1px solid rgb(229, 231, 237);
+    width: 100%;
+
+    user-select: none;
+}
+
+nav a {
+    color: rgb(131, 134, 145);
+    font-weight: 400;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+nav li {
+    padding: 10px;
+}
+
+nav ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}
+
+.error {
+    color: rgb(255, 84, 84);
+    font-size: 1rem;
+}
+
+.btn {
+    /* disattiva il selezzionamento blu da mobile */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* usato per fare in modo che le icone nei pulsanti non rendano i pulsanti impremibili */
+.p-e-none {
+    pointer-events: none;
+}
+
+.transparent-c-btn {
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 25px;
+    background: none;
+    cursor: pointer;
+    transition: 150ms;
+}
+
+@media (width >= 500px)  { 
+    .transparent-c-btn:hover {
+        background-color: rgb(236, 236, 236, .5);
+    }
+}
+
+@media (width < 500px)  {
+    .transparent-c-btn:active {
+        background-color: rgb(236, 236, 236, .5);
+    }
+}
+
+.btn-s1 {
+    background-color: rgb(24, 119, 242);
+    border: none;
+    font-size: 14px;
+    padding: 0 17px;
+    color: rgb(255, 255, 255);
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    height: 2rem;
+    transition: 150ms;
+}
+
+@media (width >= 500px)  { 
+    .btn-s1:hover {
+        background-color: rgb(90, 149, 226);
+    }
+}
+
+@media (width < 500px)  {
+    .btn-s1:active {
+        background-color: rgb(90, 149, 226);
+    }
+}
+
+.btn-s2 {
+    background-color: rgb(255, 255, 255);
+    border: solid rgba(103, 103, 103, 0.2) 1px;
+    font-size: 14px;
+    padding: 0 16px;
+    color: rgb(51, 53, 67);
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    height: 2rem;
+    transition: 150ms;
+}
+
+@media (width >= 500px)  {
+    .btn-s2:hover {
+        background-color: rgb(246, 246, 248);
+    }
+}
+
+@media (width < 500px)  {
+    .btn-s2:active {
+        background-color: rgb(246, 246, 248);
+    }
+}
+
+.btn-s3 {
+    background-color: rgb(248, 81, 73);
+    border: none;
+    font-size: 14px;
+    padding: 0 17px;
+    color: rgb(255, 255, 255);
+    font-weight: 700;
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    height: 2rem;
+    transition: 150ms;
+}
+
+@media (width >= 500px)  { 
+    .btn-s3:hover {
+        background-color: rgb(245, 133, 127);
+    }
+}
+
+@media (width < 500px)  {
+    .btn-s3:active {
+        background-color: rgb(245, 133, 127);
+    }
+}
+
+.btn-s4 {
+    background-color: rgb(255, 255, 255);
+    border: solid rgba(255, 70, 70, 0.4) 1px;
+    font-size: 14px;
+    padding: 0 16px;
+    color: rgb(51, 53, 67);
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    height: 2rem;
+    transition: 150ms;
+}
+
+@media (width >= 500px)  {
+    .btn-s4:hover {
+        background-color: rgba(255, 200, 200, 0.8);
+    }
+}
+
+@media (width < 500px)  {
+    .btn-s4:active {
+        background-color: rgba(255, 200, 200, 0.8);
+    }
+}
+
+.in-s1 {
+    position: relative;
+    border-radius: 6px;
+    height: 2rem;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(221, 223, 226);
+    color: rgb(29, 33, 41);
+    padding: 0 8px;
+    outline: none;
+    font-size: 15px;
+    transition: 150ms;
+}
+
+.in-s1:focus {
+    border-color: rgb(24, 119, 242);
+    box-shadow: 0 0 0 2px rgb(231, 243, 255);
+}
+
+.flex-c {
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+}

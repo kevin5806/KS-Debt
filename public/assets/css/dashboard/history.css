@@ -1,0 +1,41 @@
+.history {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll; 
+    height: 9rem;
+
+    row-gap: 5px;
+
+    scrollbar-width: none;
+}
+
+.history > section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2px;
+
+    background-color: rgba(87, 87, 87, 3%);
+    border: solid rgba(153, 153, 153, 13%) 1px;
+
+    padding: 4px;
+
+    border-radius: 5px;
+}
+
+.history > section .header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.history > section .content {
+    display: flex;
+    column-gap: 2px;
+}
+
+.history > section .content span {
+    margin-left: 4px;
+}
+
+.history::-webkit-scrollbar{
+    width: 0;
+} 

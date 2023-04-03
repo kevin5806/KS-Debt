@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Varela Round';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/VarelaRound-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'Brightness';
+    font-style: normal;
+    src: url(../fonts/Brightness.ttf);
+}
+
+@font-face {
+    font-family: 'Planet';
+    font-style: normal;
+    src: url(../fonts/Plante.ttf);
+}
+
+@font-face {
+    font-family: 'TiltNeon';
+    font-style: normal;
+    src: url(../fonts/TiltNeon.ttf);
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    src: url(../fonts/Roboto-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'RobotoCondensed';
+    font-style: normal;
+    src: url(../fonts/RobotoCondensed-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'Pencil';
+    font-style: normal;
+    src: url(../fonts/Pencil.ttf);
+}

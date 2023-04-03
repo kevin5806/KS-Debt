@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="shortcut icon" href="/assets/images/favi/favicon.png" type="image/x-icon">
+    
+    <!-- pwa -->
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#ffffff"/>
+    <link rel="apple-touch-icon" href="/pwa/images/ks-logo-ios.png">
+
+    <title>KevinServ DB - Dashboard</title>
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            <li><a draggable="false" href="/"><img draggable="false" class="logo" src="/assets/images/KS-logo.png" alt="logo"></a></li>
+            <li><a draggable="false" href="/dashboard">Dashboard</a></li>
+        </ul>
+        <div class="nav-btn">
+            <button id="addDataBtn" value="0" class="btn-s2 btn btn-add "><span class="p-e-none"><img height="10px" width="10px" src="/assets/svg/plus.svg"></span></button>
+            <button id="menuBtn" value="0" class="btn-s1 btn">Menu</button>
+        </div>
+    </nav>
+</header>
+
+<div id="addData" class="add-data none">
+    <div>
+        <form action="/data/add" method="post">
+            <h4>New Person</h4>
+            <div>
+                <input class="in-s1" name="name" maxlength="35" placeholder="Nome" type="text">
+            </div>
+
+            <div class="sum-add">
+                <select class="in-s1" name="sign">
+                    <option value="1">-</option>
+                    <option value="2" selected>+</option>
+                </select>
+                <input class="in-s1" max="9999.99" step="0.01" name="sum" placeholder="Somma" type="number"> <p>€</p>
+            </div>
+
+            <% if (error == 1) { %> <p class="error flex-c"> Input inserito non valido </p> <% } %> 
+
+            <button id="addDataSB" <% if (error == 1) { %> value="1" <% } else { %> value="0" <% } %> class="btn-s1 btn" type="submit">Add</button>
+        </form>
+    </div>
+</div>
+
+<div id="menu" class="menu none">
+    <div>
+        <h4>Menu</h4>
+        <div class="content">
+            <a id="settings-btn" draggable="false" class="flex-c btn btn-s1" href="/settings"><img height="20px" width="20px" src="/assets/svg/white-settings.svg">Settings</a>
+            <a draggable="false" class="flex-c btn btn-s2" href="/new/invite"><img height="20px" width="20px" src="/assets/svg/invite.svg">Invite</a>
+            <a draggable="false" class="flex-c btn btn-s2" href="/logout"><img height="20px" width="20px" src="/assets/svg/logout.svg">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div id="inviteCode" class="invite-code <% if (!(InviteCode)) { %> none <% } %>">
+    <div>
+        <header>
+            <h4>Invite</h4>
+            <button id="inviteCodeBTNc" class="transparent-c-btn btn"><span class="p-e-none"><img style="rotate: 45deg;" height="12px" width="12px" src="/assets/svg/plus.svg"></span></button>
+        </header>
+        
+        <div class="content">
+            <span>
+                <label for="inviteCodeIN">Code</label>
+                <input value="<%=InviteCode%>" placeholder="code here" id="inviteCodeIN" type="text" readonly>
+                <button id="inviteCodeCopyBTN" class="transparent-c-btn flex-c btn"> <span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/copy.svg"></span></button>
+            </span>
+            <span>
+                <label for="inviteLinkIN">Link</label>
+                <input value="<%=`${url}/register?InviteCode=${InviteCode}`%>" placeholder="link here" id="inviteLinkIN" type="text" readonly>
+                <button id="inviteLinkCopyBTN" class="transparent-c-btn flex-c btn"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/copy.svg"></span></button>
+            </span>
+        </div>
+    </div>
+</div>
+
+<main>
+    <article class="data">
+        <% data.forEach((data) => { %> 
+
+            <div id="<%=data.id%>">
+                <div id="<%="e" + data.id%>" class="edit-pop none">
+                    
+                    <main>
+                        <form method="post" action="/data/edit">
+                            <input name="id" class="none" type="text" value="<%= data.id %>">
+                            
+                            <section class="edit-pop-header">
+                                <div>
+                                    <h4>Edit</h4>
+                                </div>
+                                <div class="delete-btn">
+                                    <button class="transparent-c-btn flex-c btn" name="sBtn" type="submit" value="2"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/bin.svg"></span></button>
+                                </div>
+                            </section>
+
+                            <section>
+                                <select class="in-s1" name="operation">
+                                    <option value="1" selected>Add Value</option>
+                                    <option value="2">Set Value</option>
+                                </select>
+                            </section>
+
+                            <section>
+                                <div class="sum">
+                                    <select class="in-s1" name="sign">
+                                        <option value="1" selected>-</option>
+                                        <option value="2">+</option>
+                                    </select>
+                                    
+                                    <input class="in-s1" name="sum" max="9999.99" step="0.01" placeholder="Somma" type="number" id="<%="eIN" + data.id%>"> <p>€</p>
+                                </div>
+                            </section>
+
+                            <section class="error flex-c">
+                                <% if (error == 2) { if (data.id == errorID) { %> <p>Input inserito non valido.</p> <% }} %> 
+                            </section>
+
+                            <section class="e-pop-Btns">
+                                <button class="btn-s2 btn" type="button" value="<%=data.id%>" id="editUN">undo</button>
+                                <button class="btn-s1 btn" name="sBtn" type="submit" value="1">save</button>    
+                            </section>
+                            
+                        </form>
+                    </main>
+                </div>
+
+                <main>
+                    <article class="data-head">
+                        <section  class="name">
+                            <p><%=data.name%></p>
+                        </section>
+                        <section>
+                            <button id="editBtn" class="transparent-c-btn flex-c btn" value="<%=data.id%>"><span class="p-e-none"><img height="22px" width="22px" src="/assets/svg/edit.svg"></span></button>
+                        </section>
+                        
+                    </article>
+
+                    <article class="money-c">
+
+                        <%  
+                            let nStr = data.sum.toString(); 
+                            let prt = nStr.split('.'); 
+                            let intPrt = prt[0]; 
+                            let decPrt = prt[1] || '00'; 
+                            intPrt = intPrt.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); 
+                            let n = intPrt + ',' + decPrt;  
+                            if (decPrt.length == 1) { n += '0' }; 
+                        %>
+
+                        <p class="count <% if (data.sum > 0) { %>green<% } else if (data.sum < 0) { %>red<% } %> "> <%= n %> </p> <p class="simbol">€</p>  
+
+                    </article>
+
+                    <article class="history">
+
+                        <% 
+                            data.history.reverse().forEach((history) => {
+                                
+                                let date = history.date;
+
+                                const dayNow = new Date().getDate();
+                                const dayDB = new Date(date).getDate();
+
+                                if (dayNow === dayDB) {
+
+                                    date = new Date(date).toLocaleTimeString('it-IT', { hour12: false, hour: '2-digit', minute:'2-digit' })
+
+                                } else {
+
+                                    date = new Date(date).toLocaleDateString("it-IT", {day: "2-digit", month: "2-digit", year: "2-digit"})
+                    
+                                }
+                        %>
+
+                                <section>
+                                    <% 
+                                        const sumSaved = history.sumSaved;
+                                        const sumVariation = history.sumVariation;
+                                        const action = history.action;
+
+                                        let color = "black";
+
+                                        if (action == 1) {
+                                            if (sumVariation > 0) { color = "green"; } else if (sumVariation < 0) { color = "red"; }
+
+                                        } else {
+                                            if (sumSaved > 0) { color = "green"; } else if (sumSaved < 0) { color = "red"; }
+                                        }
+
+
+                                        switch (action) {
+                                            case 1:
+                                                %> 
+                                                    <div class="header">
+                                                        <p>Added</p> <p><%=date%></p>
+                                                    </div>
+                                                    
+                                                    <div class="content">
+                                                        <p class="<%=color%>"><%=sumVariation%></p> <p>€</p> <span><p> total <%=sumSaved%></p></span> <p>€</p>
+                                                    </div>
+                                                <%
+                                            break;
+                                            
+                                            case 2:
+                                                %> 
+                                                    <div class="header">
+                                                        <p>Setted</p> <p><%=date%></p>
+                                                    </div>
+                                                    
+                                                    <div class="content">
+                                                        <p class="<%=color%>"><%=sumVariation%></p> <p>€</p>
+                                                    </div>
+                                                <%
+                                            break;
+
+                                            default:
+                                                %>  
+                                                    <div class="header">
+                                                        <p>Created</p> <p><%=date%></p>
+                                                    </div>
+                                                    
+                                                    <div class="content">
+                                                        <p class="<%=color%>"><%=sumSaved%></p> <p>€</p>
+                                                    </div>
+                                                    
+                                                <%
+                                            break;
+                                        }
+                                    %>
+                                </section>
+                        <%  })  %>
+
+                    </article>
+                </main>
+            </div>
+        <% }) %>
+    </article>
+</main>
+
+<script src="/assets/js/dashboard.js"></script>
+
+</body>
+</html>
