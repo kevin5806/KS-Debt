@@ -76,19 +76,19 @@ router.get('/log', async (req, res) => {
 })
 
 router.post('/invite', async (req, res) => {
-    
     try {
 
         // Verifica l'autenticazione
         if (!req.session.auth) return res.redirect('/login?error=4');
 
         const sessionUID = req.session.userID;
+        const id = req.body.id;
 
         //se l'utente è bannato viene reindirizzato al logout
         if (await User.findOne({_id: req.session.userID, ban: true}) ) return res.redirect('/logout');
 
         //eliminazione log
-        await Invitecode.findOneAndRemove({ _id: req.body.id, creatorID: sessionUID, valid: true });
+        await Invitecode.findOneAndRemove({ _id: id, creatorID: sessionUID, valid: true });
 
         res.redirect('/settings');
 
