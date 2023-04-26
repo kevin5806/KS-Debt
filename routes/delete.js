@@ -88,7 +88,7 @@ router.post('/invite', async (req, res) => {
         if (await User.findOne({_id: req.session.userID, ban: true}) ) return res.redirect('/logout');
 
         //eliminazione log
-        await Invitecode.findOneAndRemove({ _id: id, creatorID: sessionUID, valid: true });
+        await Invitecode.findOneAndRemove({ _id: {$eq: id}, creatorID: sessionUID, valid: true });
 
         res.redirect('/settings');
 
