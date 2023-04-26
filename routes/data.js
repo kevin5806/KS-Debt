@@ -104,7 +104,7 @@ router.post('/edit', async (req, res) => {
 
         ) return res.redirect(`/dashboard?error=2&id=${id}`);
         
-        const data = await Data.findOne({userID: sessionUID, _id: id });
+        const data = await Data.findOne({userID: sessionUID, _id: id});
 
         if (sBtn === 1) {
             // inviato con il pulsante normale
@@ -174,7 +174,7 @@ router.post('/edit', async (req, res) => {
             // inviato con il pulsante delete
 
             // Elimina il dato dal database
-            await data.remove();
+            await data.deleteOne();
 
         }
 
