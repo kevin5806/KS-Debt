@@ -67,7 +67,7 @@ router.post('/add', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({ err });
+        res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'Server Error'});
 
     }
 })
@@ -183,7 +183,7 @@ router.post('/edit', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({ err });
+        res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'Server Error'});
 
     }
 })

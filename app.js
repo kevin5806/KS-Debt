@@ -113,7 +113,7 @@ app.get('/logout', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({ err });
+        res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'Server Error'});
 
     }
 })
@@ -135,7 +135,9 @@ app.use('/delete', require('./routes/delete'));
 // ############### Errore 404 #####################
 
 app.use(function (req, res, next) {
-    res.status(404).sendFile(__static + '/404.html');
+
+    res.status(404).render('error', {error: false, status: 404, message: 'You might have lost yourself'});
+
 })
 
 // ############## Avvio Server ####################
