@@ -60,7 +60,7 @@ router.post('/invite/email', async (req, res) => {
         // Verifica della validità degli input
         if (!email) return res.redirect(`/dashboard?InviteCode=${code}&error=4`);
 
-        await Invite.findOneAndUpdate({creatorID: sessionUID, code: {$eq: code}}, {email: {$eq: email}});
+        await Invite.findOneAndUpdate({creatorID: sessionUID, code: {$eq: code}}, {email: email});
 
         const name = userData.name, surname = userData.name, user = userData.user;
 
