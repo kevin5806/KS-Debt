@@ -7,7 +7,7 @@ const emailPASS = process.env.EMAIL_PASS;
 
 // Configura il trasportatore
 const EmailTransport = nodemailer.createTransport({
-    host: "smtp-relay.sendinblue.com",
+    host: 'smtp-relay.sendinblue.com',
     port: 587,
     auth: {
         user: emailUSER,

@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const rateLimit = require('express-rate-limit');
 
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
@@ -24,21 +25,44 @@ const sessionKEY = process.env.SESSION_KEY;
 
 // ######### Impostazioni AppExpress ##############
 
-//imposto la cartella e la engine di render
+// Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');
 
-// utilizzo delle librerie express
+// Defaul Settings
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//per la sicurezza e la protezzione da vari tipi di attachi del app
+// MiddleWare automatico per l'aumento della sicurezza
 app.use(helmet());
 
-//serve per servire file statici accessibili da tutte le pagina del sito
-
+// Set Risorse statiche
 const __static = __dirname + '/public';
-
 app.use(express.static(__static));
+
+// ################ HTTP rate limiter ######################
+
+// limita i client a 100 richieste ogni 8 minuti, per IP
+app.use(
+    rateLimit({
+        windowMs: 1000 * 60 * 8 , // 8 minuti
+        max: 100
+    })
+)
+
+// custom error page
+app.use((err, req, res, next) => {
+
+    if (err instanceof RateLimitError) {
+
+        res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
+
+    } else {
+
+        next(err);
+
+    }
+
+})
 
 // ##################### Database ###########################
 
