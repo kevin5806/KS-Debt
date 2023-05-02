@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/404.css">
+    <link rel="shortcut icon" href="/assets/images/favi/favicon.png" type="image/x-icon">
+    
+    <!-- pwa -->
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#ffffff"/>
+    <link rel="apple-touch-icon" href="/pwa/images/ks-logo-ios.png">
+
+    <title>KevinServ DB - <%= status %></title>
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            <li><a draggable="false" href="/"><img draggable="false" class="logo" src="/assets/images/KS-logo.png" alt="logo"></a></li>
+            <li><a draggable="false" href="/dashboard">Dashboard</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="flex-c">
+    <article>
+
+        <!-- 
+        ex: 
+            res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'message'});
+
+        -->
+
+        <h1 class="title"><%= status %></h1>
+
+        <p><%= message %></p>
+
+        <a draggable="false" class="flex-c btn btn-s2" href="/">Safe Page</a>
+
+        <p class="error"><%= error %></p>
+
+    </article>
+</main>
+
+</body>
+</html>
