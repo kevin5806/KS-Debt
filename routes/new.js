@@ -35,7 +35,7 @@ router.get('/invite', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'Server Error'});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -60,7 +60,7 @@ router.post('/invite/email', async (req, res) => {
         // Verifica della validità degli input
         if (!email) return res.redirect(`/dashboard?InviteCode=${code}&error=4`);
 
-        await Invite.findOneAndUpdate({creatorID: sessionUID, code: code}, {email: email});
+        await Invite.findOneAndUpdate({creatorID: sessionUID, code: {$eq: code}}, {email: {$eq: email}});
 
         const name = userData.name, surname = userData.name, user = userData.user;
 
@@ -84,7 +84,7 @@ router.post('/invite/email', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: JSON.stringify(err), status: 500, message: 'Server Error'});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
