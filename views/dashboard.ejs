@@ -82,6 +82,22 @@
                 <button id="inviteLinkCopyBTN" class="transparent-c-btn flex-c btn"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/copy.svg"></span></button>
             </span>
         </div>
+        <hr>
+
+        <div class="email">
+            <h5>Send by email</h5>
+            <form method="post" action="/new/invite/email">
+                <input required class="none" value="<%= InviteCode %>" type="text" name="code">
+                <input required placeholder="email@example.com" class="in-s1" type="email" name="email">
+                <button class="btn-s1" type="submit">Send</button>
+            </form>
+
+            <% if (error == 4) { %> <p class="error-2 flex-c">Input inserito non valido</p> <% } %>
+
+            <% if (status == 1) { %> <p class="message-s2 flex-c">Email sended</p> <% } %>
+
+        </div>
+
     </div>
 </div>
 
@@ -94,7 +110,7 @@
                     
                     <main>
                         <form method="post" action="/data/edit">
-                            <input name="id" class="none" type="text" value="<%= data.id %>">
+                            <input required name="id" class="none" type="text" value="<%= data.id %>">
                             
                             <section class="edit-pop-header">
                                 <div>

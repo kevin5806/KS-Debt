@@ -3,12 +3,12 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
-const { User, Data, Invitecode, LOG } = require('../database/models');
+const { User, Data, Invite, LOG } = require('../database/models');
 
 //ottimizzata
 router.post('/account', async (req, res) => {
     try {
-        
+
         // Verifica l'autenticazione
         if (!req.session.auth) return res.redirect('/login?error=4');
 
@@ -16,13 +16,13 @@ router.post('/account', async (req, res) => {
 
         //verifica del ban
         const userData = await User.findById(sessionUID);
-        
+
         //se l'utente è bannato viene reindirizzato al logout
         if (userData.ban) return res.redirect('/logout');
 
         // Estrae i dati dalla richiesta
         const password = req.body.password;
-        
+
         // Verifica l'input inserito
         if (typeof password !== "string") return res.redirect('/settings?error=3');
 
@@ -36,7 +36,7 @@ router.post('/account', async (req, res) => {
         await Promise.all([
             Data.deleteMany({ userID: sessionUID }),
             LOG.deleteMany({ userID: sessionUID }),
-            Invitecode.deleteMany({ $or: [{ creatorID: sessionUID, valid: true }, { _id: userData.inviteCodeID }] }),
+            Invite.deleteMany({ $or: [{ creatorID: sessionUID, valid: true }, { _id: userData.inviteID }] }),
             User.findByIdAndRemove(sessionUID)
         ])
 
@@ -45,13 +45,13 @@ router.post('/account', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
 
 router.get('/log', async (req, res) => {
-    
+
     try {
 
         // Verifica l'autenticazione
@@ -60,7 +60,7 @@ router.get('/log', async (req, res) => {
         const sessionUID = req.session.userID;
 
         //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({_id: req.session.userID, ban: true}) ) return res.redirect('/logout');
+        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
 
         //eliminazione log
         await LOG.deleteMany({ userID: sessionUID });
@@ -69,7 +69,7 @@ router.get('/log', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 
@@ -85,16 +85,16 @@ router.post('/invite', async (req, res) => {
         const id = req.body.id;
 
         //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({_id: req.session.userID, ban: true}) ) return res.redirect('/logout');
+        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
 
         //eliminazione log
-        await Invitecode.findOneAndRemove({ _id: {$eq: id}, creatorID: sessionUID, valid: true });
+        await Invite.findOneAndRemove({ _id: { $eq: id }, creatorID: sessionUID, valid: true });
 
         res.redirect('/settings');
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 

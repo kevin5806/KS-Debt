@@ -19,13 +19,33 @@ main article {
     align-items: center;
 
     row-gap: 2rem;
+
+    max-width: 90%;
+    white-space: pre-wrap;
+    text-overflow: ellipsis;
+}
+
+main article span {
+    margin-top: 1rem;
+
+    border: solid rgba(180, 180, 180, 0.6) 2px;
+    border-radius: 15px;
+    padding: 0 1rem;
+
+    width: 90%;
+    max-width: 1000px;
 }
 
 main article p {
+    display: flex;
+    flex-direction: column;
+
     font-size: 1em;
     font-family: 'RobotoCondensed';
+
+    word-wrap: break-word !important;
 }
 
 main article a {
-    width: 80%;
+    width: 240px;
 }

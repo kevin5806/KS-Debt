@@ -89,9 +89,12 @@
                                 <section class="data">
                                     
                                     <p class="sub">Code</p> <p> <%= data.code %> </p>
+                                    
+                                    <%if (data.email) { %> <span><p class="sub">Email:</p> <p><%= data.email %></p></span> <% } %>
+                                    
                                     <span><p class="sub">Created:</p> <p> <%= date %> </p></span>
                                     <span><p class="sub">Valid:</p> <p class="<% if (data.valid) { %> green <% } else { %> red <% } %>"> <%= data.valid %> </p></span>
-    
+                                
                                 </section>
 
                                 <% if (data.valid) { %>
@@ -140,9 +143,9 @@
 
                                 <div class="content">
                                     <form method="post" action="/delete/account">
-                                        <% if (error == 3) { %> <p class="error flex-c in-s1">Wrong Password</p> <% } %>
+                                        <% if (error == 3) { %> <p class="error-2 flex-c">Wrong Password</p> <% } %>
                                         
-                                        <input class="in-s1" placeholder="Account password" type="password" name="password">
+                                        <input required class="in-s1" placeholder="Account password" type="password" name="password">
 
                                         <button class="btn btn-s3" type="submit">Delete Account</button>
                                     </form>

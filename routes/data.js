@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { User, Data, Invitecode, LOG, DataHistory } = require('../database/models');
+const { User, Data, Invite, LOG, DataHistory } = require('../database/models');
 
 //ottimizzata
 router.post('/add', async (req, res) => {
@@ -13,7 +13,7 @@ router.post('/add', async (req, res) => {
         const sessionUID = req.session.userID;
 
         //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({_id: sessionUID, ban: true}) ) return res.redirect('/logout');
+        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
 
         // Estrae i dati dalla richiesta
         let sum = Number(req.body.sum);
@@ -26,7 +26,7 @@ router.post('/add', async (req, res) => {
             isNaN(sum) ||
             sum < -9999.99 || sum > 9999.99 ||
             typeof name !== 'string' ||
-            name === '' || 
+            name === '' ||
             name.length > 35 ||
             (sign !== 1 && sign !== 2)
 
@@ -42,7 +42,7 @@ router.post('/add', async (req, res) => {
         } else {
 
             // Positivo
-            sum = Math.abs(sum);  
+            sum = Math.abs(sum);
 
         }
 
@@ -67,7 +67,7 @@ router.post('/add', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -82,7 +82,7 @@ router.post('/edit', async (req, res) => {
         const sessionUID = req.session.userID;
 
         //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({_id: sessionUID, ban: true}) ) return res.redirect('/logout');
+        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
 
         // Estrae i dati dalla richiesta
         const id = req.body.id;
@@ -94,21 +94,21 @@ router.post('/edit', async (req, res) => {
         // Verifica la validità dei dati inseriti
         if (
 
-            id === '' 
-            || typeof id !== 'string' 
-            || isNaN(sum) 
-            || (sum === '' && operation !== 2 && sBtn !== 2) 
-            || !(operation === 1 || operation === 2) 
-            || !(sBtn === 1 || sBtn === 2) 
+            id === ''
+            || typeof id !== 'string'
+            || isNaN(sum)
+            || (sum === '' && operation !== 2 && sBtn !== 2)
+            || !(operation === 1 || operation === 2)
+            || !(sBtn === 1 || sBtn === 2)
             || !(sign === 1 || sign === 2)
 
         ) return res.redirect(`/dashboard?error=2&id=${id}`);
-        
-        const data = await Data.findOne({userID: sessionUID, _id: id});
+
+        const data = await Data.findOne({ userID: sessionUID, _id: id });
 
         if (sBtn === 1) {
             // inviato con il pulsante normale
-            
+
             if (sign === 1) {
 
                 // Negativo
@@ -118,7 +118,7 @@ router.post('/edit', async (req, res) => {
             } else {
 
                 // Positivo
-                sum = Math.abs(sum);  
+                sum = Math.abs(sum);
 
             }
 
@@ -127,11 +127,11 @@ router.post('/edit', async (req, res) => {
                 // Operazione ADD
                 let sumVariation = sum; //valore di sum = input al savataggio
 
-                sum = Number(data.sum + sum).toFixed(2); 
+                sum = Number(data.sum + sum).toFixed(2);
 
                 //prima del salvataggio controlla che la somma aggiornata non superi i limiti
                 if (sum < -9999.99 || sum > 9999.99) return res.redirect(`/dashboard?error=2&id=${id}`);
-                
+
                 data.sum = sum; //somma attuale
 
                 data.history.push(
@@ -141,7 +141,7 @@ router.post('/edit', async (req, res) => {
                         sumSaved: sum, //valore del totale al savataggio
                         sumVariation: sumVariation, //valore di input al savataggio 
                         date: new Date()
-                    
+
                     })
                 )
 
@@ -161,12 +161,12 @@ router.post('/edit', async (req, res) => {
                         sumSaved: sum, //valore del totale al savataggio
                         sumVariation: sum, //valore di input al savataggio 
                         date: new Date()
-                    
+
                     })
                 )
 
             }
-            
+
             // Salva il documento modificato
             await data.save();
 
@@ -183,7 +183,7 @@ router.post('/edit', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })

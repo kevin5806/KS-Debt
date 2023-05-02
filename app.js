@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const rateLimit = require('express-rate-limit');
 
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
@@ -7,12 +8,11 @@ const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
 
-const nodemailer = require('nodemailer');
-
 //COSTANTI APP
 
-//creazione dell app
 const app = express();
+
+// ################### ENV ########################
 
 //parametri del server
 const PORT = process.env.PORT || 3000;
@@ -25,19 +25,44 @@ const sessionKEY = process.env.SESSION_KEY;
 
 // ######### Impostazioni AppExpress ##############
 
-//imposto la cartella e la engine di render
+// Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');
 
-// utilizzo delle librerie express
+// Defaul Settings
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//per la sicurezza e la protezzione da vari tipi di attachi del app
+// MiddleWare automatico per l'aumento della sicurezza
 app.use(helmet());
 
-//serve per servire file statici accessibili da tutte le pagina del sito
-const __static =  __dirname + '/public'; 
+// Set Risorse statiche
+const __static = __dirname + '/public';
 app.use(express.static(__static));
+
+// ################ HTTP rate limiter ######################
+
+// limita i client a 100 richieste ogni 8 minuti, per IP
+app.use(
+    rateLimit({
+        windowMs: 1000 * 60 * 8 , // 8 minuti
+        max: 100
+    })
+)
+
+// custom error page
+app.use((err, req, res, next) => {
+
+    if (err instanceof RateLimitError) {
+
+        res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
+
+    } else {
+
+        next(err);
+
+    }
+
+})
 
 // ##################### Database ###########################
 
@@ -45,12 +70,10 @@ app.use(express.static(__static));
 mongoose.set('strictQuery', true);
 
 // Connessione al database
-mongoose.connect( mongoURL, {
+mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-
-const { User, Data, Invitecode, LOG } = require('./database/models');
 
 // ################ Sessioni ######################
 
@@ -59,19 +82,19 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoURL,
 
-        touchAfter: 24 * 3600 *1, // indica il tempo massimo senza un utilizzo della sessione (in s)
+        touchAfter: 3600 * 24 * 20, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
         autoRemove: 'native', // rimuovi automaticamente le sessioni scadute dal database
         mongoOptions: { useNewUrlParser: true } // opzioni per la connessione a MongoDB
     }),
 
     //chiave di criptazione per le sessioni
-    secret: sessionKEY, 
-    
+    secret: sessionKEY,
+
     resave: false,
     saveUninitialized: false,
-    
+
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 3, // indica la durata massima di un login (in ms)
+        maxAge: 1000 * 60 * 60 * 24 * 90, // indica la durata massima di un login (in ms) {ultima cifra = giorni}
         httpOnly: true
     }
 }))
@@ -114,7 +137,7 @@ app.get('/logout', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -133,43 +156,12 @@ app.use('/data', require('./routes/data'));
 
 app.use('/delete', require('./routes/delete'));
 
-app.get('/fakemail', (req, res) => {
-    res.sendFile(__static + '/fakemail.html');
-});
-
-app.post('/fakemail', (req, res) => {
-    // Configura il trasportatore
-const transporter = nodemailer.createTransport({
-        host: "smtp-relay.sendinblue.com",
-        port: 587,
-        auth: {
-            user: process.env.emailUser,
-            pass: process.env.emailPass
-        }
-  });
-  
-  // Configura il messaggio di posta elettronica
-  const mailOptions = {
-    from: req.body.from,
-    to: req.body.to,
-    subject: req.body.sub,
-    text: req.body.text
-  };
-  
-  // Invia la mail
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      res.status(500).send(error);
-    } else {
-        res.redirect('/fakemail');
-    }
-  });
-});
-
 // ############### Errore 404 #####################
 
-app.use(function(req, res, next) {
-    res.status(404).sendFile(__static + '/404.html');
+app.use(function (req, res, next) {
+
+    res.status(404).render('error', {error: false, status: 404, message: 'You might have lost yourself'});
+
 })
 
 // ############## Avvio Server ####################
