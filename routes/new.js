@@ -62,7 +62,7 @@ router.post('/invite/email', async (req, res) => {
 
         await Invite.findOneAndUpdate({creatorID: sessionUID, code: {$eq: code}}, {email: email});
 
-        const name = userData.name, surname = userData.name, user = userData.user;
+        const name = userData.name, surname = userData.surname, user = userData.user;
 
         const url = `${req.protocol}://${req.get('host')}`
         const html = await ejs.renderFile('email/newInvite.ejs', {user, name, surname, url, code});
