@@ -53,21 +53,22 @@ const User = mongoose.model('user',
         password: { type: String},
         name: { type: String},
         surname: { type: String},
-        inviteCodeID: { type: String},
+        inviteID: { type: String},
         ban: { type: Boolean }
 
     })
 )
 
-const Invitecode = mongoose.model('invitecode',
+const Invite = mongoose.model('invite',
     new mongoose.Schema({
 
         code: { type: String },
         creatorID: { type: String },
         valid: { type: Boolean },
-        creationDate: { type: String }
+        creationDate: { type: String },
+        email: { type: String }
 
     })
 )
 
-module.exports = { User, Data, Invitecode, LOG, DataHistory };
+module.exports = { User, Data, Invite, LOG, DataHistory};

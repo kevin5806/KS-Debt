@@ -113,11 +113,6 @@ nav ul {
     height: 50px;
 }
 
-.error {
-    color: rgb(255, 84, 84);
-    font-size: 1rem;
-}
-
 .btn {
     /* disattiva il selezzionamento blu da mobile */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -272,8 +267,51 @@ nav ul {
     box-shadow: 0 0 0 2px rgb(231, 243, 255);
 }
 
+.error {
+    color: rgb(255, 84, 84);
+    font-size: 1rem;
+}
+
+.error-2 {
+    color: rgb(255, 0, 0);
+    border: 1px solid rgba(226, 100, 100, 0.735);
+    border-radius: 6px;
+    height: 2rem;
+    background-color: rgb(255, 255, 255);
+    padding: 0 8px;
+    outline: none;
+    font-size: 15px;
+}
+
+.message-s1 {
+    color: rgb(53, 197, 0);
+    border: 1px solid rgba(53, 197, 0, 0.735);
+    border-radius: 6px;
+    height: 2rem;
+    background-color: rgb(255, 255, 255);
+    padding: 0 8px;
+    outline: none;
+    font-size: 15px;
+}
+
+.message-s2 {
+    color: rgb(0, 157, 255);
+    border: 1px solid rgba(0, 157, 255, 0.735);
+    border-radius: 6px;
+    height: 2rem;
+    background-color: rgb(255, 255, 255);
+    padding: 0 8px;
+    outline: none;
+    font-size: 15px;
+}
+
 .flex-c {
     display: flex;
     align-items: center !important;
     justify-content: center !important;
+}
+
+hr {
+    border: 1px solid rgb(221, 223, 226);
+    margin: 10px 0;
 }

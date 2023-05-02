@@ -115,3 +115,20 @@
     border-color: #1877f2;
     box-shadow: 0 0 0 2px #e7f3ff;
 }
+
+.invite-code .email {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+.invite-code .email form {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.invite-code .email input {
+    height: 30px !important;
+    width: 11rem;
+}

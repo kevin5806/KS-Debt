@@ -60,11 +60,6 @@
     align-items: flex-end;
 }
 
-.account .delete .content .error {
-    color: red;
-    border: 1px solid rgba(226, 100, 100, 0.735);
-}
-
 .account .delete .content form {
     display: flex;
     flex: 1;

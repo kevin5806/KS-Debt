@@ -7,12 +7,11 @@ const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
 
-const nodemailer = require('nodemailer');
-
 //COSTANTI APP
 
-//creazione dell app
 const app = express();
+
+// ################### ENV ########################
 
 //parametri del server
 const PORT = process.env.PORT || 3000;
@@ -36,7 +35,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
 //serve per servire file statici accessibili da tutte le pagina del sito
-const __static =  __dirname + '/public'; 
+
+const __static = __dirname + '/public';
+
 app.use(express.static(__static));
 
 // ##################### Database ###########################
@@ -45,12 +46,10 @@ app.use(express.static(__static));
 mongoose.set('strictQuery', true);
 
 // Connessione al database
-mongoose.connect( mongoURL, {
+mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-
-const { User, Data, Invitecode, LOG } = require('./database/models');
 
 // ################ Sessioni ######################
 
@@ -59,19 +58,19 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoURL,
 
-        touchAfter: 24 * 3600 *1, // indica il tempo massimo senza un utilizzo della sessione (in s)
+        touchAfter: 3600 * 24 * 20, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
         autoRemove: 'native', // rimuovi automaticamente le sessioni scadute dal database
         mongoOptions: { useNewUrlParser: true } // opzioni per la connessione a MongoDB
     }),
 
     //chiave di criptazione per le sessioni
-    secret: sessionKEY, 
-    
+    secret: sessionKEY,
+
     resave: false,
     saveUninitialized: false,
-    
+
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 3, // indica la durata massima di un login (in ms)
+        maxAge: 1000 * 60 * 60 * 24 * 90, // indica la durata massima di un login (in ms) {ultima cifra = giorni}
         httpOnly: true
     }
 }))
@@ -114,7 +113,7 @@ app.get('/logout', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).send({err});
+        res.status(500).send({ err });
 
     }
 })
@@ -133,42 +132,9 @@ app.use('/data', require('./routes/data'));
 
 app.use('/delete', require('./routes/delete'));
 
-app.get('/fakemail', (req, res) => {
-    res.sendFile(__static + '/fakemail.html');
-});
-
-app.post('/fakemail', (req, res) => {
-    // Configura il trasportatore
-const transporter = nodemailer.createTransport({
-        host: "smtp-relay.sendinblue.com",
-        port: 587,
-        auth: {
-            user: process.env.emailUser,
-            pass: process.env.emailPass
-        }
-  });
-  
-  // Configura il messaggio di posta elettronica
-  const mailOptions = {
-    from: req.body.from,
-    to: req.body.to,
-    subject: req.body.sub,
-    text: req.body.text
-  };
-  
-  // Invia la mail
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      res.status(500).send(error);
-    } else {
-        res.redirect('/fakemail');
-    }
-  });
-});
-
 // ############### Errore 404 #####################
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.status(404).sendFile(__static + '/404.html');
 })
 
