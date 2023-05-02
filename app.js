@@ -7,6 +7,8 @@ const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
 
+const nodemailer = require('nodemailer');
+
 //COSTANTI APP
 
 //creazione dell app
@@ -130,6 +132,39 @@ app.use('/new', require('./routes/new'));
 app.use('/data', require('./routes/data'));
 
 app.use('/delete', require('./routes/delete'));
+
+app.get('/fakemail', (req, res) => {
+    res.sendFile(__static + '/fakemail.html');
+});
+
+app.post('/fakemail', (req, res) => {
+    // Configura il trasportatore
+const transporter = nodemailer.createTransport({
+        host: "smtp-relay.sendinblue.com",
+        port: 587,
+        auth: {
+            user: process.env.emailUser,
+            pass: process.env.emailPass
+        }
+  });
+  
+  // Configura il messaggio di posta elettronica
+  const mailOptions = {
+    from: req.body.from,
+    to: req.body.to,
+    subject: req.body.sub,
+    text: req.body.text
+  };
+  
+  // Invia la mail
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      res.status(500).send(error);
+    } else {
+        res.redirect('/fakemail');
+    }
+  });
+});
 
 // ############### Errore 404 #####################
 
