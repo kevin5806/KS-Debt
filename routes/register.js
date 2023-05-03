@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     //error = 2 > Codice di invito non presente sul database
     //error = 3 > Codice di invito già usato
     //error = 4> User gia in uso
-    res.render('register', { error: req.query.error, Invite: req.query.InviteCode });
+    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode });
 
 })
 
