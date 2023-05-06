@@ -117,7 +117,7 @@ app.use(session({
 
 
 */
-// ################## Route #######################
+// ################# Routes #######################
 
 app.get('/', (req, res) => {
 
@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
 
 })
 
-//ottimizzata
+
 app.get('/logout', async (req, res) => {
     try {
 
@@ -150,11 +150,11 @@ app.use('/login', require('./routes/login'));
 
 app.use('/register', require('./routes/register'));
 
-app.use('/new', require('./routes/new'));
+app.use('/new', require('./routes/new/routes'));
 
-app.use('/data', require('./routes/data'));
+app.use('/delete', require('./routes/delete/routes'));
 
-app.use('/delete', require('./routes/delete'));
+app.use('/edit', require('./routes/edit/routes'));
 
 // ############### Errore 404 #####################
 

@@ -1,13 +1,17 @@
+// ################ Imports ######################
+
 const express = require('express');
 const router = express.Router();
 
 const uuid = require('uuid');
 const ejs = require('ejs');
 
-const { User, Data, Invite, LOG} = require('../database/models');
-const { EmailTransport } = require('../email/transport');
+const { User, Invite } = require('../../database/models');
+const { EmailTransport } = require('../../email/transport');
 
-router.get('/invite', async (req, res) => {
+// ################ Routes ######################
+
+router.get('/', async (req, res) => {
     try {
 
         // Verifica l'autenticazione
@@ -40,7 +44,8 @@ router.get('/invite', async (req, res) => {
     }
 })
 
-router.post('/invite/email', async (req, res) => {
+
+router.post('/email', async (req, res) => {
     try {
 
         // Verifica l'autenticazione
@@ -88,5 +93,7 @@ router.post('/invite/email', async (req, res) => {
 
     }
 })
+
+// ################ Exports ######################
 
 module.exports = router;

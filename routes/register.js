@@ -1,9 +1,13 @@
+// ################ Imports ######################
+
 const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
-const { User, Data, Invite, LOG } = require('../database/models');
+const { User, Invite } = require('../database/models');
+
+// ################ Routes ######################
 
 router.get('/', (req, res) => {
 
@@ -16,7 +20,6 @@ router.get('/', (req, res) => {
 })
 
 
-//ottimizzata
 router.post('/', async (req, res) => {
     try {
 
@@ -79,5 +82,7 @@ router.post('/', async (req, res) => {
 
     }
 })
+
+// ################ Exports ######################
 
 module.exports = router;

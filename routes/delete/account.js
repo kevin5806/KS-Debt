@@ -1,12 +1,15 @@
+// ################ Imports ######################
+
 const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
-const { User, Data, Invite, LOG } = require('../database/models');
+const { User, Data, Invite, LOG } = require('../../database/models');
 
-//ottimizzata
-router.post('/account', async (req, res) => {
+// ################ Routes ######################
+
+router.post('/', async (req, res) => {
     try {
 
         // Verifica l'autenticazione
@@ -50,54 +53,6 @@ router.post('/account', async (req, res) => {
     }
 })
 
-router.get('/log', async (req, res) => {
-
-    try {
-
-        // Verifica l'autenticazione
-        if (!req.session.auth) return res.redirect('/login?error=4');
-
-        const sessionUID = req.session.userID;
-
-        //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
-
-        //eliminazione log
-        await LOG.deleteMany({ userID: sessionUID });
-
-        res.redirect('/settings');
-
-    } catch (err) {
-
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
-
-    }
-
-})
-
-router.post('/invite', async (req, res) => {
-    try {
-
-        // Verifica l'autenticazione
-        if (!req.session.auth) return res.redirect('/login?error=4');
-
-        const sessionUID = req.session.userID;
-        const id = req.body.id;
-
-        //se l'utente è bannato viene reindirizzato al logout
-        if (await User.findOne({ _id: sessionUID, ban: true })) return res.redirect('/logout');
-
-        //eliminazione log
-        await Invite.findOneAndRemove({ _id: { $eq: id }, creatorID: sessionUID, valid: true });
-
-        res.redirect('/settings');
-
-    } catch (err) {
-
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
-
-    }
-
-})
+// ################ Exports ######################
 
 module.exports = router;
