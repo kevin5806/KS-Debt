@@ -1,11 +1,14 @@
+// ################ Imports ######################
+
 const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
-const { User, Data, Invite, LOG } = require('../database/models');
+const { User, LOG } = require('../database/models');
 
-//ottimizzata
+// ################ Routes ######################
+
 router.get('/', (req, res) => {
 
     //error = 1 > input inserito non valido
@@ -17,7 +20,6 @@ router.get('/', (req, res) => {
 })
 
 
-//ottimizzata
 router.post('/', async (req, res) => {
     try {
 
@@ -70,5 +72,7 @@ router.post('/', async (req, res) => {
 
     }
 })
+
+// ################ Exports ######################
 
 module.exports = router;

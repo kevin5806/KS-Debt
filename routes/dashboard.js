@@ -1,9 +1,12 @@
+// ################ Imports ######################
+
 const express = require('express');
 const router = express.Router();
 
-const { User, Data, Invite, LOG } = require('../database/models');
+const { User, Data, LOG } = require('../database/models');
 
-//ottimizzata
+// ################ Routes ######################
+
 router.get('/', async (req, res) => {
     try {
 
@@ -28,7 +31,6 @@ router.get('/', async (req, res) => {
 
         res.render('dashboard', {
             data: data,
-            /* inviteCC: inviteCC, */
             InviteCode: req.query.InviteCode,
             url: `${req.protocol}://${req.get('host')}`,
             error: req.query.error,
@@ -42,5 +44,7 @@ router.get('/', async (req, res) => {
 
     }
 })
+
+// ################ Exports ######################
 
 module.exports = router;
