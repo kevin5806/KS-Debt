@@ -42,7 +42,7 @@ app.use(express.static(__static));
 // ################ HTTP rate limiter ######################
 
 // 0.5 richiesta al secondo, per 60 secondi = 60 secondi di attesa
-app.use(
+/* app.use(
     rateLimit({
         windowMs: 1000 * 60,
         max: 30,
@@ -50,7 +50,7 @@ app.use(
             res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
         }
     })
-)
+) */
 
 // ##################### Database ###########################
 

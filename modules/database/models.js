@@ -71,4 +71,41 @@ const Invite = mongoose.model('invite',
     })
 )
 
-module.exports = { User, Data, Invite, LOG, DataHistory};
+const registerSchema = new mongoose.Schema({
+
+    code: String,
+    stage: Number,
+    expire: { type: Date, expires: 0 },
+
+    //stage 0
+    inviteID: String,
+
+    //stage 1
+    email: String,
+    emailVerifyID: String,
+
+    //Stage 2
+    user: String,
+    password: String,
+
+    //Stage 3
+    name: String,
+    surname: String
+
+})
+
+registerSchema.index({ expire: 1 }, { expireAfterSeconds: 3600 });
+
+const Register = mongoose.model('register', registerSchema);
+
+
+const emailVerifySchema = new mongoose.Schema({
+    code: String,
+    date: Date
+})
+
+emailVerifySchema.index({ expire: 1 }, { expireAfterSeconds: 3600 });
+
+const EmailVerify = mongoose.model('emailVerify', emailVerifySchema);
+
+module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify };

@@ -3,9 +3,10 @@
 const express = require('express');
 const router = express.Router();
 
+const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 
-const { User, Invite } = require('../modules/database/models');
+const { User, Invite, Register } = require('../modules/database/models');
 
 // ################ Routes ######################
 
@@ -19,8 +20,46 @@ router.get('/', (req, res) => {
 
 })
 
+// lo stage precedente inizializza lo stage sucessivo in modo da evitare cambi di dati
 
 router.post('/', async (req, res) => {
+    try {
+
+        const inviteCode = req.body.inviteCode;
+
+        // Verifica della validità degli input
+        if (!inviteCode || typeof inviteCode !== "string" || !uuid.validate(inviteCode)) return res.redirect('/register?error=1');
+
+        // Verifica che il codice esista e che non sia già stato usato
+        const inviteData = await Invite.findOne({ inviteCode });
+
+        // Se il codice di invito non esiste restituisce un errore
+        if (!inviteData) return res.redirect('/register?error=2');
+
+        // Se "valid" è falso restituisce un errore
+        if (!inviteData.valid) return res.redirect('/register?error=3');
+
+        const registerCode = uuid.v5();
+
+        await new Register({
+
+            code: registerCode,
+            stage: 1
+
+        })
+
+        // Ritorno al login
+        res.redirect(`/register?registerCode=${registerCode}`);
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+
+    }
+})
+
+
+router.post('/ex', async (req, res) => {
     try {
 
         // Estrae i dati dalla richiesta
