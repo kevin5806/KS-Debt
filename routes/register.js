@@ -5,7 +5,7 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
-const { User, Invite } = require('../database/models');
+const { User, Invite } = require('../modules/database/models');
 
 // ################ Routes ######################
 

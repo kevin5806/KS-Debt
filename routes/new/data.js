@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { User, Data } = require('../../database/models');
+const { User, Data } = require('../../modules/database/models');
 
 // ################ Routes ######################
 

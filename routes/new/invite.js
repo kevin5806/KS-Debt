@@ -6,8 +6,8 @@ const router = express.Router();
 const uuid = require('uuid');
 const ejs = require('ejs');
 
-const { User, Invite } = require('../../database/models');
-const { EmailTransport } = require('../../email/transport');
+const { User, Invite } = require('../../modules/database/models');
+const { EmailTransport } = require('../../modules/email/transport');
 
 // ################ Routes ######################
 
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
             code: code,
             creatorID: sessionUID,
             valid: true,
-            creationDate: new Date()
+            date: new Date()
 
         }).save();
 
