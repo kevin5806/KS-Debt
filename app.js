@@ -41,28 +41,16 @@ app.use(express.static(__static));
 
 // ################ HTTP rate limiter ######################
 
-// limita i client a 100 richieste ogni 8 minuti, per IP
+// 0.5 richiesta al secondo, per 60 secondi = 60 secondi di attesa
 app.use(
     rateLimit({
-        windowMs: 1000 * 60 * 8 , // 8 minuti
-        max: 100
+        windowMs: 1000 * 60,
+        max: 30,
+        handler: (req, res, next) => {
+            res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
+        }
     })
 )
-
-// custom error page
-app.use((err, req, res, next) => {
-
-    if (err instanceof RateLimitError) {
-
-        res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
-
-    } else {
-
-        next(err);
-
-    }
-
-})
 
 // ##################### Database ###########################
 
@@ -167,8 +155,6 @@ app.use(function (req, res, next) {
 // ############## Avvio Server ####################
 
 //avvio del server
-app.listen(PORT, () => {
-    console.log(`server aperto sulla porta ${PORT}`);
-})
+app.listen(PORT);
 
 // ################################################
