@@ -25,6 +25,15 @@
         </ul>
     </nav>
 </header>
+
+<!-- FORM REQUEST LOADER -->
+<div id="submitLoader" class="none loader flex-c">
+    <div class="flex-c">
+        <p>LOADING</p>
+        <span class="loader-icon"></span>
+    </div>
+</div>
+
 <main>
     <div class="container">
         <article class="title">
@@ -66,7 +75,7 @@
                         <% }) %>   
                     </main>
                     <div>
-                        <a class="flex-c btn btn-s3" href="/delete/log"><img height="16px" width="16px" src="/assets/svg/white-bin.svg">Log</a>
+                        <a scope="serverAction" class="flex-c btn btn-s3" href="/delete/log"><img height="16px" width="16px" src="/assets/svg/white-bin.svg">Log</a>
                     </div>
                 </div>
 
@@ -162,6 +171,7 @@
 </main>
 
 <script src="/assets/js/settings.js"></script>
+<script src="/assets/js/main.js"></script>
 
 </body>
 </html>

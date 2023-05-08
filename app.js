@@ -42,7 +42,7 @@ app.use(express.static(__static));
 // ################ HTTP rate limiter ######################
 
 // 0.5 richiesta al secondo, per 60 secondi = 60 secondi di attesa
-/* app.use(
+app.use(
     rateLimit({
         windowMs: 1000 * 60,
         max: 30,
@@ -50,7 +50,7 @@ app.use(express.static(__static));
             res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
         }
     })
-) */
+)
 
 // ##################### Database ###########################
 
@@ -70,7 +70,7 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoURL,
 
-        touchAfter: 3600 * 24 * 20, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
+        touchAfter: 3600 * 24 * 30, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
         autoRemove: 'native', // rimuovi automaticamente le sessioni scadute dal database
         mongoOptions: { useNewUrlParser: true } // opzioni per la connessione a MongoDB
     }),
@@ -79,7 +79,7 @@ app.use(session({
     secret: sessionKEY,
 
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
 
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 90, // indica la durata massima di un login (in ms) {ultima cifra = giorni}
