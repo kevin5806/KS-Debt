@@ -73,8 +73,11 @@ const Invite = mongoose.model('invite',
 
 const registerSchema = new mongoose.Schema({
 
-    code: String,
+    publicCode: String, 
+    privateCode: String,
+
     stage: Number,
+    
     expire: { type: Date, expires: 0 },
 
     //stage 0
@@ -82,7 +85,7 @@ const registerSchema = new mongoose.Schema({
 
     //stage 1
     email: String,
-    emailVerifyID: String,
+    emailVerifyIDcode: String,
 
     //Stage 2
     user: String,
@@ -100,7 +103,9 @@ const Register = mongoose.model('register', registerSchema);
 
 
 const emailVerifySchema = new mongoose.Schema({
+    IDcode: String,
     code: String,
+    email: String,
     date: Date
 })
 

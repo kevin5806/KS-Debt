@@ -6,7 +6,10 @@ const router = express.Router();
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 
-const { User, Invite, Register } = require('../modules/database/models');
+const ejs = require('ejs');
+
+const { User, Invite, Register, EmailVerify } = require('../modules/database/models');
+const { EmailTransport } = require('../modules/email/transport');
 
 // ################ Routes ######################
 
@@ -16,9 +19,15 @@ router.get('/', (req, res) => {
     //error = 2 > Codice di invito non presente sul database
     //error = 3 > Codice di invito già usato
     //error = 4> User gia in uso
-    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode });
+    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode, publicCode: req.query.publicCode });
 
 })
+
+function CODE6() {
+
+    return Math.floor(100000 + Math.random() * 900000); // Genera un numero casuale compreso tra 100000 e 999999
+
+}
 
 // lo stage precedente inizializza lo stage sucessivo in modo da evitare cambi di dati
 
@@ -28,28 +37,31 @@ router.post('/', async (req, res) => {
         const inviteCode = req.body.inviteCode;
 
         // Verifica della validità degli input
-        if (!inviteCode || typeof inviteCode !== "string" || !uuid.validate(inviteCode)) return res.redirect('/register?error=1');
+        if (!inviteCode || typeof inviteCode !== "string" || !uuid.validate(inviteCode)) return res.redirect('/register?error='); //set errror
 
         // Verifica che il codice esista e che non sia già stato usato
         const inviteData = await Invite.findOne({ inviteCode });
 
         // Se il codice di invito non esiste restituisce un errore
-        if (!inviteData) return res.redirect('/register?error=2');
+        if (!inviteData) return res.redirect('/register?error='); //set errror
 
         // Se "valid" è falso restituisce un errore
-        if (!inviteData.valid) return res.redirect('/register?error=3');
+        if (!inviteData.valid) return res.redirect('/register?error='); //set errror
 
-        const registerCode = uuid.v5();
+        const publicCode = uuid.v4();
+        const privateCode = uuid.v4();
 
         await new Register({
 
-            code: registerCode,
-            stage: 1
+            stage: 1,
+            publicCode, privateCode
 
-        })
+        }).save();
+
+        req.session.register = { privateCode }
 
         // Ritorno al login
-        res.redirect(`/register?registerCode=${registerCode}`);
+        res.redirect(`/register?publicCode=${publicCode}`);
 
     } catch (err) {
 
@@ -58,6 +70,66 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.post('/email', async (req, res) => {
+    try {
+
+        const email = req.body.email;
+        const publicCode = req.body.publicCode;
+
+        const privateCode = req.session.register.privateCode;
+
+        // Verifica della validità degli input
+        if (!email || typeof email !== "string") return res.redirect(`/register?publicCode=${publicCode}&error=1`); //set errror
+
+        const registerData = await Register.findOne({ privateCode: privateCode, publicCode: publicCode });
+
+        // Verifica se il documento con i codici è stato trovato
+        if (!registerData) return res.redirect('/register?error=2'); //set errror
+
+        // Verifica se lo stage è quello corretto
+        if (!registerData.stage === 1) return res.redirect('/register?error=3'); //set errror
+
+        const IDcode = uuid.v4();
+        const code = Math.floor(100000 + Math.random() * 900000);
+
+        await new EmailVerify({
+
+            date: new Date(),
+            code, IDcode, email
+
+        }).save();
+
+        registerData.emailVerifyIDcode = IDcode;
+
+        await registerData.save();
+
+        // Send Email
+        const url = `${req.protocol}://${req.get('host')}`
+        const html = await ejs.renderFile('modules/email/emailVerify.ejs', { url, code });
+
+        // Configura il messaggio di posta elettronica
+        const mail = {
+            from: 'KSDB <noreply@mooreventi.com>',
+            to: email,
+            replyTo: 'kevinservdb@gmail.com',
+            subject: 'Your Email Verify Code',
+            html: html
+        }
+
+        // Invia la mail
+        await EmailTransport.sendMail(mail);
+
+        
+
+        // Ritorno al login
+        res.redirect(`/register?publicCode=${publicCode}`);
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+
+    }
+})
 
 router.post('/ex', async (req, res) => {
     try {

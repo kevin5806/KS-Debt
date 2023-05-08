@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/email', async (req, res) => {
-    try {
+   /*  try { */
 
         // Verifica l'autenticazione
         if (!req.session.auth) return res.redirect('/login?error=4');
@@ -70,7 +70,7 @@ router.post('/email', async (req, res) => {
         const name = userData.name, surname = userData.surname, user = userData.user;
 
         const url = `${req.protocol}://${req.get('host')}`
-        const html = await ejs.renderFile('email/newInvite.ejs', {user, name, surname, url, code});
+        const html = await ejs.renderFile('modules/email/newInvite.ejs', {user, name, surname, url, code});
 
         // Configura il messaggio di posta elettronica
         const mail = {
@@ -82,16 +82,16 @@ router.post('/email', async (req, res) => {
         }
 
         // Invia la mail
-        EmailTransport.sendMail(mail);
+        await EmailTransport.sendMail(mail);
 
         // Reindirizza passando lo stato di successo
         res.redirect(`/dashboard?InviteCode=${code}&status=1`);
 
-    } catch (err) {
+/*     } catch (err) {
 
         res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
-    }
+    } */
 })
 
 // ################ Exports ######################
