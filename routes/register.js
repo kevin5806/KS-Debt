@@ -19,15 +19,9 @@ router.get('/', (req, res) => {
     //error = 2 > Codice di invito non presente sul database
     //error = 3 > Codice di invito già usato
     //error = 4> User gia in uso
-    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode, publicCode: req.query.publicCode });
+    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode, stage: req.query.stage });
 
 })
-
-function CODE6() {
-
-    return Math.floor(100000 + Math.random() * 900000); // Genera un numero casuale compreso tra 100000 e 999999
-
-}
 
 // lo stage precedente inizializza lo stage sucessivo in modo da evitare cambi di dati
 
@@ -37,7 +31,7 @@ router.post('/', async (req, res) => {
         const inviteCode = req.body.inviteCode;
 
         // Verifica della validità degli input
-        if (!inviteCode || typeof inviteCode !== "string" || !uuid.validate(inviteCode)) return res.redirect('/register?error='); //set errror
+        if (!inviteCode || typeof inviteCode !== "string" || !uuid.validate(inviteCode)) return res.redirect('/register?error=1'); //set errror
 
         // Verifica che il codice esista e che non sia già stato usato
         const inviteData = await Invite.findOne({ inviteCode });
@@ -48,20 +42,23 @@ router.post('/', async (req, res) => {
         // Se "valid" è falso restituisce un errore
         if (!inviteData.valid) return res.redirect('/register?error='); //set errror
 
-        const publicCode = uuid.v4();
-        const privateCode = uuid.v4();
+        const key = uuid.v4();
+
+        res.cookie('registerKey', key, {
+            maxAge: 1000 * 3600, // 1 ora
+            httpOnly: true
+        })
 
         await new Register({
 
+            inviteID: inviteData._id,
             stage: 1,
-            publicCode, privateCode
+            key
 
         }).save();
 
-        req.session.register = { privateCode }
-
-        // Ritorno al login
-        res.redirect(`/register?publicCode=${publicCode}`);
+         // Reindirizza passando il prossimo stage
+        res.redirect('/register?stage=1');
 
     } catch (err) {
 
@@ -74,14 +71,18 @@ router.post('/email', async (req, res) => {
     try {
 
         const email = req.body.email;
-        const publicCode = req.body.publicCode;
-
-        const privateCode = req.session.register.privateCode;
 
         // Verifica della validità degli input
-        if (!email || typeof email !== "string") return res.redirect(`/register?publicCode=${publicCode}&error=1`); //set errror
+        if (!email || typeof email !== "string") return res.redirect('/register?error=1'); //set errror
 
-        const registerData = await Register.findOne({ privateCode: privateCode, publicCode: publicCode });
+        // Verifica della presenza del user sul database
+        const userData = await User.findOne({ email });
+
+        // Se l'user esiste già restituisce un errore
+        if (userData) return res.redirect('/register?error=');
+
+        // Ricerca dati con la chiave
+        const registerData = await Register.findOne({ key: req.cookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=2'); //set errror
@@ -89,21 +90,23 @@ router.post('/email', async (req, res) => {
         // Verifica se lo stage è quello corretto
         if (!registerData.stage === 1) return res.redirect('/register?error=3'); //set errror
 
-        const IDcode = uuid.v4();
+        // Genera codice a 6 cifre
         const code = Math.floor(100000 + Math.random() * 900000);
 
-        await new EmailVerify({
-
+        // Crea un nuovo documento
+        const emailVerify = new EmailVerify({
             date: new Date(),
-            code, IDcode, email
+            code,
+            email
+        })
+        
+        // Salvo il documento di verifica email
+        await emailVerify.save();
 
-        }).save();
+        // Dopo il salvataggio l'ID è accessibile
+        registerData.emailVerifyID = emailVerify._id;
 
-        registerData.emailVerifyIDcode = IDcode;
-
-        await registerData.save();
-
-        // Send Email
+        // Render del Email
         const url = `${req.protocol}://${req.get('host')}`
         const html = await ejs.renderFile('modules/email/emailVerify.ejs', { url, code });
 
@@ -119,10 +122,11 @@ router.post('/email', async (req, res) => {
         // Invia la mail
         await EmailTransport.sendMail(mail);
 
-        
+        // Se tutto è corretto salvataggio dei dati email
+        await registerData.save();
 
-        // Ritorno al login
-        res.redirect(`/register?publicCode=${publicCode}`);
+        // Reindirizza passando il prossimo stage
+        res.redirect('/register?stage=1.5');
 
     } catch (err) {
 
@@ -130,6 +134,191 @@ router.post('/email', async (req, res) => {
 
     }
 })
+
+router.post('/email/verify', async (req, res) => {
+    try {
+
+        const code = req.body.code;
+
+        // Verifica della validità degli input
+        if (!code || typeof code !== "string") return res.redirect('/register?error='); //set errror
+
+        // Ricerca dati con la chiave
+        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+
+        // Verifica se il documento con i codici è stato trovato
+        if (!registerData) return res.redirect('/register?error='); //set errror
+
+        // Verifica se lo stage è quello corretto
+        if (!registerData.stage === 1) return res.redirect('/register?error='); //set errror
+
+        // Ricerca del documento di verifica per id
+        const verifyData = await EmailVerify.findById(registerData.emailVerifyID);
+
+        // Verifica della validità del codice inserito
+        if (verifyData.code !== code) return res.redirect('/register?error='); //set errror
+
+        // Aggiunta/aggiornamento dei dati
+        registerData.email = verifyData.email;
+        registerData.stage = 2;
+
+        // Se tutto è corretto salvataggio dei dati email
+        await registerData.save();
+
+        // Elimina il codice di verifica
+        verifyData.deleteOne();
+
+        // Reindirizza passando il prossimo stage
+        res.redirect('/register?stage=2');
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: err, status: 500, message: 'Server Error'});
+
+    }
+})
+
+router.post('/account', async (req, res) => {
+    try {
+
+        // Estrae i dati dalla richiesta
+        const user = req.body.user;
+        const password = req.body.password;
+
+        // Verifica della validità degli input
+        if (!user || !password
+
+            || typeof user !== "string"
+            || typeof password !== "string"
+
+        ) return res.redirect('/register?error=');
+
+        // Ricerca dati con la chiave
+        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+
+        // Verifica se il documento con i codici è stato trovato
+        if (!registerData) return res.redirect('/register?error='); //set errror
+
+        // Verifica se lo stage è quello corretto
+        if (!registerData.stage === 2) return res.redirect('/register?error='); //set errror
+
+        // Verifica della presenza del user sul database
+        const userData = await User.findOne({ user });
+
+        // Se l'user esiste già restituisce un errore
+        if (userData) return res.redirect('/register?error=');
+
+        // Hashing della password
+        const hashPw = await bcrypt.hash(password, 10);
+        
+        // Aggiunta nuovi dati alla registrazione
+        registerData.user = user;
+        registerData.password = hashPw;
+        registerData.stage = 3;
+        
+        // Se tutto è corretto salvataggio dei dati email
+        await registerData.save();
+
+        // Reindirizza passando il prossimo stage
+        res.redirect('/register?stage=3');
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+
+    }
+})
+
+router.post('/person', async (req, res) => {
+    try {
+
+        // Estrae i dati dalla richiesta
+        const name = req.body.name;
+        const surname = req.body.surname;
+
+        // Verifica della validità degli input
+        if (!name || !surname
+
+            || typeof name !== "string"
+            || typeof surname !== "string"
+
+        ) return res.redirect('/register?error=');
+
+        // Ricerca dati con la chiave
+        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+
+        // Verifica se il documento con i codici è stato trovato
+        if (!registerData) return res.redirect('/register?error='); //set errror
+
+        // Verifica se lo stage è quello corretto
+        if (!registerData.stage === 3) return res.redirect('/register?error='); //set errror
+
+
+        // Aggiunta nuovi dati alla registrazione
+        registerData.name = name;
+        registerData.surname = surname;
+        registerData.stage = 4;
+        
+        // Se tutto è corretto salvataggio dei dati email
+        await registerData.save();
+
+        // Reindirizza passando il prossimo stage
+        res.redirect('/register?stage=4');
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+
+    }
+})
+
+router.post('/save', async (req, res) => {
+    try {
+
+        // Ricerca dati con la chiave
+        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+
+        // Verifica se il documento con i codici è stato trovato
+        if (!registerData) return res.redirect('/register?error='); //set errror
+
+        // Verifica se lo stage è quello corretto
+        if (!registerData.stage === 4) return res.redirect('/register?error='); //set errror
+
+        // Estrazione dati
+        const { inviteID, email, user, password, name, surname } = registerData;
+
+
+        // Savataggio del user sul database
+        await new User({
+    
+            inviteID,
+
+            email,
+
+            user,
+            password,
+
+            name,
+            surname,
+
+        }).save();
+
+        // Cancella i dati di registrazione
+        registerData.deleteOne();
+
+        // Rende l'invito non più valido
+        await Invite.findByIdAndUpdate(inviteID, { valid: false });
+
+        // Ritorno al login
+        res.redirect('/login');
+
+    } catch (err) {
+
+        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+
+    }
+})
+
 
 router.post('/ex', async (req, res) => {
     try {
@@ -172,12 +361,13 @@ router.post('/ex', async (req, res) => {
 
         // Savataggio del user sul database
         await new User({
+
             inviteID: codeData._id,
             name: name,
             surname: surname,
             user: user,
-            password: hashPw,
-            ban: false
+            password: hashPw
+
         }).save();
 
         // Se la registrazione è stata salvata correttamente, salva l'invito come usato

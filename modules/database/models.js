@@ -7,8 +7,9 @@ const LOG = mongoose.model('log',
 
         userID: String,
         client: String,
-        date: Date,
-        ip: String
+        ip: String,
+
+        date: { type: Date, default: Date.now }
 
     })
 )
@@ -27,7 +28,8 @@ const dataHistorySchema = new mongoose.Schema({
     action: Number,
     sumSaved: Number,
     sumVariation: Number,
-    date: Date
+
+    date: { type: Date, default: Date.no }
 
 })
 
@@ -54,7 +56,10 @@ const User = mongoose.model('user',
         name: String,
         surname: String,
         inviteID: String,
-        ban: Boolean
+
+        email: String,
+
+        ban: { type:Boolean, default: false }
 
     })
 )
@@ -64,53 +69,57 @@ const Invite = mongoose.model('invite',
 
         code: String,
         creatorID: String,
-        valid: Boolean,
-        date: Date,
-        email: String
+        email: String,
+        
+        valid: { type: Boolean, default: true },
+        date: { type: Date, default: Date.now },
 
     })
 )
 
-const registerSchema = new mongoose.Schema({
+const Register = mongoose.model('register', 
+    new mongoose.Schema({
 
-    publicCode: String, 
-    privateCode: String,
+        key: String,
+        stage: Number,
 
-    stage: Number,
-    
-    expire: { type: Date, expires: 0 },
+        //stage 0
+        inviteID: String,
 
-    //stage 0
-    inviteID: String,
+        //stage 1
+        email: String,
+        emailVerifyID: String,
 
-    //stage 1
-    email: String,
-    emailVerifyIDcode: String,
+        //Stage 2
+        user: String,
+        password: String,
 
-    //Stage 2
-    user: String,
-    password: String,
+        //Stage 3
+        name: String,
+        surname: String,
 
-    //Stage 3
-    name: String,
-    surname: String
+        expirationDate: {
+            type: Date,
+            expires: 3600, // Imposta la scadenza a 1 ora
+            default: Date.now // Imposta la data di scadenza predefinita a quella corrente
+        }
 
-})
+    })
+)
 
-registerSchema.index({ expire: 1 }, { expireAfterSeconds: 3600 });
+const EmailVerify = mongoose.model('emailVerify',
+    new mongoose.Schema({
 
-const Register = mongoose.model('register', registerSchema);
+        code: String,
+        email: String,
 
+        expirationDate: {
+            type: Date,
+            expires: 300, // Imposta la scadenza a 5 minuti
+            default: Date.now // Imposta la data di scadenza predefinita a quella corrente
+        }
 
-const emailVerifySchema = new mongoose.Schema({
-    IDcode: String,
-    code: String,
-    email: String,
-    date: Date
-})
-
-emailVerifySchema.index({ expire: 1 }, { expireAfterSeconds: 3600 });
-
-const EmailVerify = mongoose.model('emailVerify', emailVerifySchema);
+    })
+)
 
 module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify };

@@ -8,6 +8,8 @@ const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
 
+const cookieParser = require('cookie-parser');
+
 //COSTANTI APP
 
 const app = express();
@@ -24,6 +26,9 @@ const mongoURL = process.env.DB_URL;
 const sessionKEY = process.env.SESSION_KEY;
 
 // ######### Impostazioni AppExpress ##############
+
+// MiddleWare gestione cookie
+app.use(cookieParser());
 
 // Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');

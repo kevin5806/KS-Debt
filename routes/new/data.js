@@ -58,8 +58,7 @@ router.post('/', async (req, res) => {
             history: [{
 
                 action: 3,
-                sumSaved: sum,
-                date: new Date(),
+                sumSaved: sum
 
             }]
 

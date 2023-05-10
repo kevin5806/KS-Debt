@@ -36,6 +36,8 @@
 
 <main id="main" style="flex-direction: column; row-gap: 10px;">
 
+    <h5>Stage: <%= stage %></h5>
+
     <form action="/register" method="post">
 
         <input name="inviteCode" type="text" placeholder="Invite Code">
@@ -44,12 +46,53 @@
 
     </form>
 
-    <form action="/register/email?<%= publicCode %>" method="post">
+    <p>-----------</p>
 
-        <input class="none" value="<%= publicCode %>" name="publicCode" type="text">
+    <form action="/register/email" method="post">
+
         <input name="email" type="text" placeholder="email">
 
         <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/email/verify" method="post">
+
+        <input name="code" type="text" placeholder="email verify code">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/account" method="post">
+
+        <input name="user" type="text" placeholder="username">
+        <input name="password" type="password" placeholder="password">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/person" method="post">
+
+        <input name="name" type="text" placeholder="name">
+        <input name="surname" type="text" placeholder="surname">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/save" method="post">
+
+        <button type="submit">Create Account</button>
 
     </form>
 

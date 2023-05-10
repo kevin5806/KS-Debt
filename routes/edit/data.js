@@ -93,8 +93,7 @@ router.post('/', async (req, res) => {
 
                         action: 2, //add action
                         sumSaved: sum, //valore del totale al savataggio
-                        sumVariation: sum, //valore di input al savataggio 
-                        date: new Date()
+                        sumVariation: sum //valore di input al savataggio 
 
                     })
                 )

@@ -28,9 +28,7 @@ router.get('/', async (req, res) => {
         await new Invite({
 
             code: code,
-            creatorID: sessionUID,
-            valid: true,
-            date: new Date()
+            creatorID: sessionUID
 
         }).save();
 
