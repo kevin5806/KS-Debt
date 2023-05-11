@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const ejs = require('ejs');
 
 const { User, Invite, Register, EmailVerify } = require('../modules/database/models');
-const { EmailTransport } = require('../modules/email/transport');
+const { EmailSender } = require('../modules/email/transport');
 
 // ################ Routes ######################
 
@@ -79,16 +79,16 @@ router.post('/email', async (req, res) => {
         const userData = await User.findOne({ email });
 
         // Se l'user esiste già restituisce un errore
-        if (userData) return res.redirect('/register?error=');
+        if (userData) return res.redirect('/register?error=2');
 
         // Ricerca dati con la chiave
         const registerData = await Register.findOne({ key: req.cookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
-        if (!registerData) return res.redirect('/register?error=2'); //set errror
+        if (!registerData) return res.redirect('/register?error=3'); //set errror
 
         // Verifica se lo stage è quello corretto
-        if (!registerData.stage === 1) return res.redirect('/register?error=3'); //set errror
+        if (!registerData.stage === 1) return res.redirect('/register?error=4'); //set errror
 
         // Genera codice a 6 cifre
         const code = Math.floor(100000 + Math.random() * 900000);
@@ -108,19 +108,19 @@ router.post('/email', async (req, res) => {
 
         // Render del Email
         const url = `${req.protocol}://${req.get('host')}`
-        const html = await ejs.renderFile('modules/email/emailVerify.ejs', { url, code });
+        const html = await ejs.renderFile('modules/email/emailVerify.ejs', { url, code, email });
 
         // Configura il messaggio di posta elettronica
         const mail = {
             from: 'KSDB <noreply@mooreventi.com>',
             to: email,
             replyTo: 'kevinservdb@gmail.com',
-            subject: 'Your Email Verify Code',
+            subject: `Email Verify Code: ${code}`,
             html: html
         }
 
         // Invia la mail
-        await EmailTransport.sendMail(mail);
+        await EmailSender.sendMail(mail);
 
         // Se tutto è corretto salvataggio dei dati email
         await registerData.save();

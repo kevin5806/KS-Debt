@@ -7,7 +7,7 @@ const uuid = require('uuid');
 const ejs = require('ejs');
 
 const { User, Invite } = require('../../modules/database/models');
-const { EmailTransport } = require('../../modules/email/transport');
+const { EmailSender } = require('../../modules/email/transport');
 
 // ################ Routes ######################
 
@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/email', async (req, res) => {
-   /*  try { */
+    try {
 
         // Verifica l'autenticazione
         if (!req.session.auth) return res.redirect('/login?error=4');
@@ -80,16 +80,16 @@ router.post('/email', async (req, res) => {
         }
 
         // Invia la mail
-        await EmailTransport.sendMail(mail);
+        await EmailSender.sendMail(mail);
 
         // Reindirizza passando lo stato di successo
         res.redirect(`/dashboard?InviteCode=${code}&status=1`);
 
-/*     } catch (err) {
+    } catch (err) {
 
         res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
 
-    } */
+    }
 })
 
 // ################ Exports ######################
