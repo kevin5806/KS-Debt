@@ -57,10 +57,12 @@ router.post('/', async (req, res) => {
 
         // Salvataggio dei LOG riguardo il login
         await new LOG({
+            
             userID: userData._id,
+
             client: req.headers['user-agent'],
-            date: new Date(),
             ip: req.headers['x-client-ip']
+
         }).save();
 
         // Reinderizzamento all Dashboard

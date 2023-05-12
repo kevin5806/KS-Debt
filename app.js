@@ -8,6 +8,8 @@ const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv'); dotenv.config();
 const helmet = require('helmet');
 
+const cookieParser = require('cookie-parser');
+
 //COSTANTI APP
 
 const app = express();
@@ -27,17 +29,21 @@ const sessionKEY = process.env.SESSION_KEY;
 
 // Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');
+app.set('view cache', true); //abilita le cache ejs
 
 // Defaul Settings
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// MiddleWare gestione cookie
+app.use(cookieParser());
 
 // MiddleWare automatico per l'aumento della sicurezza
 app.use(helmet());
 
 // Set Risorse statiche
 const __static = __dirname + '/public';
-app.use(express.static(__static));
+app.use(express.static(__static, { maxAge: 43200000 })); //abilita le cache per i file statici (12 ore)
 
 // ################ HTTP rate limiter ######################
 
@@ -47,7 +53,7 @@ app.use(
         windowMs: 1000 * 60,
         max: 30,
         handler: (req, res, next) => {
-            res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
+            res.status(429).render('modules/error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
         }
     })
 )
@@ -70,7 +76,7 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: mongoURL,
 
-        touchAfter: 3600 * 24 * 20, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
+        touchAfter: 3600 * 24 * 30, // indica il tempo massimo senza un utilizzo della sessione (in s) {ultima cifra = giorni}
         autoRemove: 'native', // rimuovi automaticamente le sessioni scadute dal database
         mongoOptions: { useNewUrlParser: true } // opzioni per la connessione a MongoDB
     }),
@@ -79,7 +85,7 @@ app.use(session({
     secret: sessionKEY,
 
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
 
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 90, // indica la durata massima di un login (in ms) {ultima cifra = giorni}
@@ -125,7 +131,7 @@ app.get('/logout', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -148,7 +154,7 @@ app.use('/edit', require('./routes/edit/routes'));
 
 app.use(function (req, res, next) {
 
-    res.status(404).render('error', {error: false, status: 404, message: 'You might have lost yourself'});
+    res.status(404).render('modules/error', {error: false, status: 404, message: 'You might have lost yourself'});
 
 })
 

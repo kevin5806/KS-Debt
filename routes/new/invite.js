@@ -7,7 +7,7 @@ const uuid = require('uuid');
 const ejs = require('ejs');
 
 const { User, Invite } = require('../../modules/database/models');
-const { EmailTransport } = require('../../modules/email/transport');
+const { EmailSender } = require('../../modules/email/transport');
 
 // ################ Routes ######################
 
@@ -28,9 +28,7 @@ router.get('/', async (req, res) => {
         await new Invite({
 
             code: code,
-            creatorID: sessionUID,
-            valid: true,
-            date: new Date()
+            creatorID: sessionUID
 
         }).save();
 
@@ -39,7 +37,7 @@ router.get('/', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -70,7 +68,7 @@ router.post('/email', async (req, res) => {
         const name = userData.name, surname = userData.surname, user = userData.user;
 
         const url = `${req.protocol}://${req.get('host')}`
-        const html = await ejs.renderFile('email/newInvite.ejs', {user, name, surname, url, code});
+        const html = await ejs.renderFile('modules/email/newInvite.ejs', {user, name, surname, url, code});
 
         // Configura il messaggio di posta elettronica
         const mail = {
@@ -82,14 +80,14 @@ router.post('/email', async (req, res) => {
         }
 
         // Invia la mail
-        EmailTransport.sendMail(mail);
+        await EmailSender.sendMail(mail);
 
         // Reindirizza passando lo stato di successo
         res.redirect(`/dashboard?InviteCode=${code}&status=1`);
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })

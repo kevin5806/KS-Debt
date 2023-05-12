@@ -29,6 +29,9 @@
     </nav>
 </header>
 
+<!-- FORM REQUEST LOADER -->
+<%- include('modules/loader.ejs') %>
+
 <div id="addData" class="add-data none">
     <div>
         <form action="/new/data" method="post">
@@ -57,8 +60,8 @@
         <h4>Menu</h4>
         <div class="content">
             <a id="settings-btn" draggable="false" class="flex-c btn btn-s1" href="/settings"><img height="20px" width="20px" src="/assets/svg/white-settings.svg">Settings</a>
-            <a draggable="false" class="flex-c btn btn-s2" href="/new/invite"><img height="20px" width="20px" src="/assets/svg/invite.svg">Invite</a>
-            <a draggable="false" class="flex-c btn btn-s2" href="/logout"><img height="20px" width="20px" src="/assets/svg/logout.svg">Logout</a>
+            <a scope="serverAction" draggable="false" class="flex-c btn btn-s2" href="/new/invite"><img height="20px" width="20px" src="/assets/svg/invite.svg">Invite</a>
+            <a scope="serverAction" draggable="false" class="flex-c btn btn-s2" href="/logout"><img height="20px" width="20px" src="/assets/svg/logout.svg">Logout</a>
         </div>
     </div>
 </div>
@@ -266,6 +269,7 @@
 </main>
 
 <script src="/assets/js/dashboard.js"></script>
+<script src="/assets/js/main.js"></script>
 
 </body>
 </html>

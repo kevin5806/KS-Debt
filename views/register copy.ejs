@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/regiter.css">
+    <link rel="shortcut icon" href="/assets/images/favi/favicon.png" type="image/x-icon">
+    
+    <!-- pwa -->
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#ffffff"/>
+    <link rel="apple-touch-icon" href="/pwa/images/ks-logo-ios.png">
+
+    <title>KevinServ DB - Register</title>
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            <li><a draggable="false" href="/"><img draggable="false" class="logo" src="/assets/images/KS-logo.png" alt="logo"></a></li>
+            <li><a draggable="false" href="/register">Register</a></li>
+            <li><a draggable="false" href="/login">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- FORM REQUEST LOADER -->
+<%- include('modules/loader.ejs') %>
+
+<main id="main" style="flex-direction: column; row-gap: 10px;">
+
+    <h5>Stage: <%= stage %></h5>
+
+    <form action="/register" method="post">
+
+        <input name="inviteCode" type="text" placeholder="Invite Code">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/email" method="post">
+
+        <input name="email" type="text" placeholder="email">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/email/verify" method="post">
+
+        <input name="code" type="text" placeholder="email verify code">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/account" method="post">
+
+        <input name="user" type="text" placeholder="username">
+        <input name="password" type="password" placeholder="password">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/person" method="post">
+
+        <input name="name" type="text" placeholder="name">
+        <input name="surname" type="text" placeholder="surname">
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <p>-----------</p>
+
+    <form action="/register/save" method="post">
+
+        <button type="submit">Create Account</button>
+
+    </form>
+
+</main>
+
+<script src="/assets/js/register.js"></script>
+<script src="/assets/js/main.js"></script>
+
+</body>
+</html>
