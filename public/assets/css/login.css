@@ -1,2 +1,74 @@
 @import url(main.css);
-@import url(auth.css);
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(240, 242, 245);
+    color: rgb(28, 30, 33);
+}
+
+main {
+    height: 100%;
+    width: 100%;
+}
+
+
+@media (width > 500px)  {
+    main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+article {
+    flex: 0 0 60%;
+    text-align: center;
+    padding: 60px 30px 60px 30px;
+}
+
+article form {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+}
+
+article form input, article form .btn-login {
+    width: 100%;
+    margin: 5px 0;
+    height: 45px;
+    vertical-align: middle;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+article form input {
+    border: 1px solid rgb(221, 223, 226);
+    color: rgb(29, 33, 41);
+    padding: 0 8px;
+    outline: none;
+    transition: 150ms;
+}
+
+article form input:focus {
+    border-color: rgb(24, 119, 242);
+    box-shadow: 0 0 0 2px rgb(231, 243, 255);
+}
+
+article p {
+    font-size: 14px;
+}
+
+article p a {
+    text-decoration: none;
+    color: rgb(28, 30, 33);
+    font-weight: 600;
+}
+
+.error-2 {
+    margin: 5px 0;
+}

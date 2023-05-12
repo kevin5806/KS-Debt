@@ -29,68 +29,227 @@
 <!-- FORM REQUEST LOADER -->
 <%- include('modules/loader.ejs') %>
 
-<main id="main" style="flex-direction: column; row-gap: 10px;">
+<main>
+    <% 
+    switch (stage) {
 
-    <h5>Stage: <%= stage %></h5>
+        case '4': 
+        %>
 
-    <form action="/register" method="post">
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
+                    </div>
+                </section>
 
-        <input name="inviteCode" type="text" placeholder="Invite Code">
+                <span class="terms">
+                    <p>
+                        By pressing confirm you accept all the terms and conditions mentioned in the Landing Page of the website
+                        and you agree that the developers are exempt from responsibility for the data
+                    </p>              
+                </span>
 
-        <button type="submit">Send</button>
+                <% if (error == 'g1') { %> <div class="error-2 flex-c"> <p class="error"> Wrong stage </p> </div> <% } %>
 
-    </form>
+                <form class="main-form" action="/register/save" method="post">
+                    
+                    <button type="submit" class="btn-s1 send-btn">Confirm Registration</button>
 
-    <p>-----------</p>
+                </form>
 
-    <form action="/register/email" method="post">
+                <form class="main-form" action="/register/delete" method="post">
 
-        <input name="email" type="text" placeholder="email">
+                    <button title="Cancel Registration" class="flex-c btn btn-s3" type="submit">Delete</button>
+                
+                </form>
 
-        <button type="submit">Send</button>
+            </article>
+        
+        <% 
+        break;
 
-    </form>
+        case '3': 
+        %>
 
-    <p>-----------</p>
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
 
-    <form action="/register/email/verify" method="post">
+                        <form action="/register/delete" method="post">
+                            <button title="Cancel Registration" class="transparent-c-btn flex-c btn" type="submit"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/bin.svg"></span></button>
+                        </form>
+                    </div>
+                </section>
 
-        <input name="code" type="text" placeholder="email verify code">
+                <form class="main-form" action="/register/person" method="post">
+                    
+                    <input name="name" type="text" placeholder="Name" autocomplete="name" required autofocus>
+                    <input  name="surname" type="text" placeholder="Suername" autocomplete="family-name" required>
 
-        <button type="submit">Send</button>
+                    <% if (error == 'g1') { %> <div class="error-2 flex-c"> <p class="error"> Wrong stage </p> </div> <% } %>
+                    
+                    <% if (error == 31) { %> <div class="error-2 flex-c"> <p class="error"> Invalid input </p> </div> <% } %>
 
-    </form>
+                    <button type="submit" class="btn-s1 send-btn">Next</button>
 
-    <p>-----------</p>
+                </form>
+            </article>
 
-    <form action="/register/account" method="post">
+        <%
+        break;
 
-        <input name="user" type="text" placeholder="username">
-        <input name="password" type="password" placeholder="password">
+        case '2': 
+        %>
 
-        <button type="submit">Send</button>
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
 
-    </form>
+                        <form action="/register/delete" method="post">
+                            <button title="Cancel Registration" class="transparent-c-btn flex-c btn" type="submit"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/bin.svg"></span></button>
+                        </form>
+                    </div>
+                </section>
 
-    <p>-----------</p>
+                <form class="main-form" action="/register/account" method="post">
+                    
+                    <input name="user" type="text" placeholder="Username" autocomplete="username" required autofocus>
+                    <input  name="password" type="password" placeholder="Password" autocomplete="new-password" required>
 
-    <form action="/register/person" method="post">
+                    <% if (error == 'g1') { %> <div class="error-2 flex-c"> <p class="error"> Wrong stage </p> </div> <% } %>
+                    
+                    <% if (error == 21) { %> <div class="error-2 flex-c"> <p class="error"> Invalid input </p> </div> <% } %>
+                    <% if (error == 22) { %> <div class="error-2 flex-c"> <p class="error"> Username already been taken </p> </div> <% } %>
 
-        <input name="name" type="text" placeholder="name">
-        <input name="surname" type="text" placeholder="surname">
+                    <button type="submit" class="btn-s1 send-btn">Next</button>
 
-        <button type="submit">Send</button>
+                </form>
+            </article>
 
-    </form>
+        <%
+        break;
 
-    <p>-----------</p>
+        case '1.5': 
+        %>
 
-    <form action="/register/save" method="post">
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
 
-        <button type="submit">Create Account</button>
+                        <form action="/register/delete" method="post">
+                            <button title="Cancel Registration" class="transparent-c-btn flex-c btn" type="submit"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/bin.svg"></span></button>
+                        </form>
+                    </div>
+                </section>
 
-    </form>
+                <form class="emailverify-action" action="/register/email" method="post">
+                        <input name="email" type="text" value="<%= email %>" placeholder="Email" readonly required>
+                        
+                        <a title="Edit email" href="/register?stage=1" class="transparent-c-btn flex-c btn"><span class="p-e-none"><img height="22px" width="22px" src="/assets/svg/edit.svg"></span></a>
 
+                        <button title="Resend Email Verification Code" class="transparent-c-btn flex-c btn" type="submit"><span class="p-e-none flex-c"><img style="padding: 2px 0 0 2px;" height="22px" width="22px" src="/assets/svg/send-email.svg"></span></button>
+                        
+                </form>
+
+                <form class="main-form" action="/register/emailVerify" method="post">
+                    
+                    <input title="Verification code sent to the email" name="code" type="text" placeholder="Verify Code" autofocus required>
+
+                    <% if (error == 'g1') { %> <div class="error-2 flex-c"> <p class="error"> Wrong stage </p> </div> <% } %>
+                    
+                    <% if (error == 151) { %> <div class="error-2 flex-c"> <p class="error"> Invalid input </p> </div> <% } %>
+                    <% if (error == 152) { %> <div class="error-2 flex-c"> <p class="error"> Wrong code </p> </div> <% } %>
+
+                    <button type="submit" class="btn-s1 send-btn">Next</button>
+
+                </form>
+            </article>
+
+        <%
+        break;
+
+        case '1': 
+        %>
+
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
+
+                        <form action="/register/delete" method="post">
+                            <button title="Cancel Registration" class="transparent-c-btn flex-c btn" type="submit"><span class="p-e-none"><img height="20px" width="20px" src="/assets/svg/bin.svg"></span></button>
+                        </form>
+                    </div>
+                </section>
+
+                <form class="main-form" action="/register/email" method="post">
+                    
+                    <input title="email@example.com"  name="email" type="text" placeholder="Email" autocomplete="email" required autofocus>
+                        
+                    <% if (error == 'g1') { %> <div class="error-2 flex-c"> <p class="error"> Wrong stage </p> </div> <% } %>
+                    
+                    <% if (error == 11) { %> <div class="error-2 flex-c"> <p class="error"> Invalid input </p> </div> <% } %>
+                    <% if (error == 12) { %> <div class="error-2 flex-c"> <p class="error"> Email already been taken </p> </div> <% } %>
+
+                    <button type="submit" class="btn-s1 send-btn">Next</button>
+
+                </form>
+            </article>
+
+        <%
+        break;
+    
+        default: 
+        %>
+
+            <article>
+                <section>
+                    <div class="header">
+                        <span>
+                            <img src="/assets/images/KevinServ-logo-white.png" alt="ks-logo" height="40px" width="40px">
+                            <h3 class="title">Register</h3>
+                        </span>
+                    </div>
+                </section>
+
+                <form class="main-form" action="/register" method="post">
+                    
+                    <input title="One use invite code, a user have to send you one" name="inviteCode" type="text" placeholder="Invite Code" value="<%= InviteCode %>" required autofocus>
+                        
+                    <% if (error == 1) { %> <div class="error-2 flex-c"> <p class="error"> Invalid input </p> </div> <% } %>
+                    <% if (error == 2) { %> <div class="error-2 flex-c"> <p class="error"> Invite not found </p> </div> <% } %>
+                    <% if (error == 3) { %> <div class="error-2 flex-c"> <p class="error"> Invite already used </p> </div> <% } %>
+                    <% if (error == 4) { %> <div class="error-2 flex-c"> <p class="error"> Cookie/Registration Data not found </p> </div> <% } %>
+
+                    <button type="submit" class="btn-s1 send-btn">Verify</button>
+
+                </form>
+            </article>
+        
+        <% 
+        break;
+    } 
+    %>
+    
 </main>
 
 <script src="/assets/js/register.js"></script>

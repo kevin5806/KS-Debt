@@ -6,7 +6,7 @@
     --clr-accent: rgb(174, 98, 255); /* mid color */
     --clr-neutral: rgb(255, 255, 255); /* back color */
 
-    --ff-primary: 'Roboto';
+    --ff-primary: 'Roboto', sens-serif;
     --ff-secondary: 'Varela Round', sans-serif; /* usato nel conteggio soldi */
     --ff-terz: 'milky', sans-serif;
 
