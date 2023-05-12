@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
         // ###############################
 
         // Ricerca dati sul invito tramite codice
-        const inviteData = await Invite.findOne({ inviteCode });
+        const inviteData = await Invite.findOne({ code: inviteCode });
 
         // Se il codice di invito non esiste restituisce un errore
         if (!inviteData) return res.redirect(`/register?error=2&InviteCode=${inviteCode}`);
