@@ -240,7 +240,7 @@ router.post('/emailVerify', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('modules/error', {error: err, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
