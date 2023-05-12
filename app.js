@@ -27,22 +27,23 @@ const sessionKEY = process.env.SESSION_KEY;
 
 // ######### Impostazioni AppExpress ##############
 
-// MiddleWare gestione cookie
-app.use(cookieParser());
-
 // Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');
+app.set('view cache', true); //abilita le cache ejs
 
 // Defaul Settings
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// MiddleWare gestione cookie
+app.use(cookieParser());
 
 // MiddleWare automatico per l'aumento della sicurezza
 app.use(helmet());
 
 // Set Risorse statiche
 const __static = __dirname + '/public';
-app.use(express.static(__static));
+app.use(express.static(__static, { maxAge: 43200000 })); //abilita le cache per i file statici (12 ore)
 
 // ################ HTTP rate limiter ######################
 
@@ -52,7 +53,7 @@ app.use(
         windowMs: 1000 * 60,
         max: 30,
         handler: (req, res, next) => {
-            res.status(429).render('error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
+            res.status(429).render('modules/error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
         }
     })
 )
@@ -130,7 +131,7 @@ app.get('/logout', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -153,7 +154,7 @@ app.use('/edit', require('./routes/edit/routes'));
 
 app.use(function (req, res, next) {
 
-    res.status(404).render('error', {error: false, status: 404, message: 'You might have lost yourself'});
+    res.status(404).render('modules/error', {error: false, status: 404, message: 'You might have lost yourself'});
 
 })
 

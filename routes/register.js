@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -130,7 +130,7 @@ router.post('/email', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -173,7 +173,7 @@ router.post('/email/verify', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: err, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: err, status: 500, message: 'Server Error'});
 
     }
 })
@@ -224,7 +224,7 @@ router.post('/account', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -267,7 +267,7 @@ router.post('/person', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -314,7 +314,7 @@ router.post('/save', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })
@@ -379,7 +379,7 @@ router.post('/ex', async (req, res) => {
 
     } catch (err) {
 
-        res.status(500).render('error', {error: false, status: 500, message: 'Server Error'});
+        res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
     }
 })

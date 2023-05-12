@@ -29,7 +29,7 @@ const dataHistorySchema = new mongoose.Schema({
     sumSaved: Number,
     sumVariation: Number,
 
-    date: { type: Date, default: Date.no }
+    date: { type: Date, default: Date.now }
 
 })
 
