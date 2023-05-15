@@ -46,21 +46,50 @@ article {
     row-gap: 1rem;
 }
 
-article section .header{
+article section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+article section .header {
     display: flex;
     justify-content: space-between;
 }
 
-article section .title {
+article section .header .title {
     font-size: 1.6em;
 }
 
-article section span{
+article section .header span {
     display: flex;
     align-items: center;
 
     column-gap: .8rem;
 }
+
+/* Stage Section */
+
+article section .stage ul {
+    column-gap: 1rem;
+}
+
+article section .stage ul li {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: black;
+}
+
+article section .stage ul .selected {
+    background-color: rgb(90, 149, 226);
+}
+
+article section .stage ul .done {
+    background-color: rgb(172, 108, 255);
+}
+
+/* -------------- */
 
 article .main-form {
     width: 100%;
