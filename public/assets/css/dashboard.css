@@ -26,6 +26,13 @@ main .no-data img {
     margin-right: 120px;
 }
 
+@media (width < 500px)  {
+    /* phone mode */
+    main .no-data img {
+        width: 10rem;
+    }
+}
+
 /* -------------------- */
 
 .edit-pop {
