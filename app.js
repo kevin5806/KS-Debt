@@ -22,8 +22,11 @@ const PORT = process.env.PORT || 3000;
 //url del database
 const mongoURL = process.env.DB_URL;
 
-//chiave di criptazione per la generazione sessioni
+// chiave di criptazione per la generazione sessioni
 const sessionKEY = process.env.SESSION_KEY;
+
+// chaive  di frima dei cookie
+const cookieKEY = process.env.COOKIE_KEY;
 
 // ######### Impostazioni AppExpress ##############
 
@@ -36,7 +39,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MiddleWare gestione cookie
-app.use(cookieParser());
+app.use(cookieParser(cookieKEY));
 
 // MiddleWare automatico per l'aumento della sicurezza
 app.use(helmet());
@@ -51,7 +54,7 @@ app.use(express.static(__static, { maxAge: 43200000 })); //abilita le cache per 
 app.use(
     rateLimit({
         windowMs: 1000 * 60,
-        max: 30,
+        max: 36,
         handler: (req, res, next) => {
             res.status(429).render('modules/error', {error: false, status: 429, message: 'Too many HTTP requests, try again later'});
         }
