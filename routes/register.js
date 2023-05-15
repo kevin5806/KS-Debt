@@ -43,7 +43,7 @@ const { EmailSender } = require('../modules/email/transport');
 
 router.get('/', (req, res) => {
 
-    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode, stage: req.query.stage, email: req.cookies.registerEmail });
+    res.render('register', { error: req.query.error, InviteCode: req.query.InviteCode, stage: req.query.stage, email: req.signedCookies.registerEmail });
 
 })
 
@@ -75,7 +75,8 @@ router.post('/', async (req, res) => {
 
         res.cookie('registerKey', key, {
             maxAge: 1000 * 3600, // 1 ora
-            httpOnly: true
+            httpOnly: true,
+            signed: true
         })
 
         await new Register({
@@ -103,7 +104,7 @@ router.post('/email', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
@@ -175,7 +176,8 @@ router.post('/email', async (req, res) => {
         // Salvo l'email nei cookie per poterla usare più semplicemente nel front-end
         res.cookie('registerEmail', email, {
             maxAge: 1000 * 3600, // 1 ora
-            httpOnly: true
+            httpOnly: true,
+            signed: true
         })
 
         // Reindirizza passando il prossimo stage
@@ -193,7 +195,7 @@ router.post('/emailVerify', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
@@ -250,7 +252,7 @@ router.post('/account', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
@@ -310,7 +312,7 @@ router.post('/person', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
@@ -359,7 +361,7 @@ router.post('/save', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
@@ -410,7 +412,7 @@ router.post('/delete', async (req, res) => {
     try {
 
         // Ricerca dati con la chiave
-        const registerData = await Register.findOne({ key: req.cookies.registerKey });
+        const registerData = await Register.findOne({ key: req.signedCookies.registerKey });
 
         // Verifica se il documento con i codici è stato trovato
         if (!registerData) return res.redirect('/register?error=4');
