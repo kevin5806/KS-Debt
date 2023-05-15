@@ -13,6 +13,21 @@ nav {
     z-index: 1;
 }
 
+/* Quando non ci sono dati nella dashboard compare un avviso */
+
+main .no-data {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+main .no-data img {
+    width: 20rem;
+    margin-right: 120px;
+}
+
+/* -------------------- */
+
 .edit-pop {
     position: absolute;
     width: 100%;

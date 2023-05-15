@@ -105,6 +105,14 @@
 </div>
 
 <main>
+    <% if (!data.length) { console.log(data); %>
+        
+        <article class="no-data">
+            <img src="/assets/svg/no-data-sign.svg" alt="no-data-img">
+        </article>
+
+    <% } %>
+
     <article class="data">
         <% data.forEach((data) => { %> 
 
