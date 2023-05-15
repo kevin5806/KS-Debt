@@ -46,7 +46,7 @@ app.use(helmet());
 
 // Set Risorse statiche
 const __static = __dirname + '/public';
-app.use(express.static(__static, { maxAge: 10800000 })); //abilita le cache per i file statici (3 ore)
+app.use(express.static(__static, { maxAge: 3600000 })); //abilita le cache per i file statici (3 ore)
 
 // ################ HTTP rate limiter ######################
 
