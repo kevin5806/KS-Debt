@@ -48,6 +48,15 @@
 
                 <div id="c1" class="log none">
                     <main>
+
+                        <% if (!logData.length) { %>
+        
+                            <span class="no-log flex-c">
+                                <img class="no-log" src="/assets/svg/no-log-sign.svg" alt="no-log-img">
+                            </span>
+                    
+                        <% } %>
+
                         <% 
                         logData.reverse().forEach((data) => {
 
