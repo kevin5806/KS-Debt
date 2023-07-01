@@ -32,7 +32,7 @@ const cookieKEY = process.env.COOKIE_KEY;
 
 // Impostazione Cartella di default di EJS, set del renderer
 app.set('view engine', 'ejs');
-app.set('view cache', true); //abilita le cache ejs
+/* app.set('view cache', true); */ //abilita le cache ejs
 
 // Defaul Settings
 app.use(express.json());
@@ -46,7 +46,7 @@ app.use(helmet());
 
 // Set Risorse statiche
 const __static = __dirname + '/public';
-app.use(express.static(__static, { maxAge: 3600000 })); //abilita le cache per i file statici (3 ore)
+app.use(express.static(__static, /* { maxAge: 3600000 } */)); //abilita le cache per i file statici (3 ore)
 
 // ################ HTTP rate limiter ######################
 
@@ -116,16 +116,11 @@ app.use(session({
 */
 // ################# Routes #######################
 
-app.get('/headers', (req, res) => {
-    res.json(req.headers);  
-})
-
 app.get('/', (req, res) => {
 
     res.sendFile(__static + '/index.html');
 
 })
-
 
 app.get('/logout', async (req, res) => {
     try {
