@@ -126,7 +126,6 @@ router.post('/email', async (req, res) => {
         // Se l'user con l'email esiste già restituisce un errore
         if (userData) return res.redirect('/register?error=12&stage=1');
 
-        
         // ###############################
 
         // Genera codice a 6 cifre
