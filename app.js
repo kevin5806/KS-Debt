@@ -114,6 +114,7 @@ app.use(session({
 
 
 */
+
 // ################# Routes #######################
 
 app.get('/', (req, res) => {
@@ -151,6 +152,8 @@ app.use('/new', require('./routes/new/routes'));
 app.use('/delete', require('./routes/delete/routes'));
 
 app.use('/edit', require('./routes/edit/routes'));
+
+app.use('/recover', require('./routes/recover'));
 
 // ############### Errore 404 #####################
 

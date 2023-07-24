@@ -122,7 +122,7 @@ const EmailVerify = mongoose.model('emailVerify',
     })
 )
 
-const newPassword = mongoose.model('newPassword', 
+const Recover = mongoose.model('Recovery', 
     new mongoose.Schema({
 
         key: String,
@@ -144,4 +144,4 @@ const newPassword = mongoose.model('newPassword',
     })
 )
 
-module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify, newPassword };
+module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify, Recover };
