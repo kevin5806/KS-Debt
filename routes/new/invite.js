@@ -44,7 +44,7 @@ router.get('/', async (req, res) => {
 
 
 router.post('/email', async (req, res) => {
-    try {
+    /* try { */
 
         // Verifica l'autenticazione
         if (!req.session.auth) return res.redirect('/login?error=4');
@@ -85,11 +85,11 @@ router.post('/email', async (req, res) => {
         // Reindirizza passando lo stato di successo
         res.redirect(`/dashboard?InviteCode=${code}&status=1`);
 
-    } catch (err) {
+    /* } catch (err) {
 
         res.status(500).render('modules/error', {error: false, status: 500, message: 'Server Error'});
 
-    }
+    } */
 })
 
 // ################ Exports ######################

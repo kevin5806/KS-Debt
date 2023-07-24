@@ -122,4 +122,26 @@ const EmailVerify = mongoose.model('emailVerify',
     })
 )
 
-module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify };
+const Recover = mongoose.model('Recovery', 
+    new mongoose.Schema({
+
+        key: String,
+        stage: Number,
+
+        //stage 0
+        email: String,
+        emailVerifyID: String,
+
+        //stage 1
+        newPassword: String,
+
+        expirationDate: {
+            type: Date,
+            expires: 600, // Imposta la scadenza a 10 min
+            default: Date.now // Imposta la data di scadenza predefinita a quella corrente
+        }
+
+    })
+)
+
+module.exports = { User, Data, Invite, LOG, DataHistory, Register, EmailVerify, Recover };
