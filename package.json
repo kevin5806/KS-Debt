@@ -23,7 +23,7 @@
     "express-session": "^1.17.3",
     "helmet": "^7.0.0",
     "mongoose": "^7.5.2",
-    "nodemailer": "^6.9.5",
+    "nodemailer": "^6.9.6",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
