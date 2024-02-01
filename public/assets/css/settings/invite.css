@@ -99,3 +99,12 @@
 .invite main article .data .sub {
     font-weight: var(--fw-medium);
 }
+
+.invite .no-invite {
+    width: 100%;
+    height: 100%;
+}
+
+.invite .no-invite img {
+    width: 10rem;
+}

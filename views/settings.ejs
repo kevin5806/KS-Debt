@@ -85,6 +85,15 @@
 
                 <div id="c2" class="invite none">
                     <main>
+
+                        <% if (!inviteData.length) { %>
+
+                            <span class="no-invite flex-c">
+                                <img class="no-invite" src="/assets/svg/no-invite-sign.svg" alt="no-invite-img">
+                            </span>
+                    
+                        <% } %>
+
                         <% 
                         inviteData.reverse().forEach((data) => { 
                         
