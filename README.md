@@ -1,2 +1,4 @@
-# KS-Debt
-An app to save debts between you and your friends
+# KevinServ Debt
+
+A node.js webapp, made to allow friends to track and share
+debts between them.
