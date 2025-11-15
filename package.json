@@ -4,7 +4,8 @@
   "description": "A WebApp to save debts between you and your friends",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
