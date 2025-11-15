@@ -154,7 +154,7 @@ router.post('/email', async (req, res) => {
 
         // Configura il messaggio di posta elettronica
         const mail = {
-            from: 'KSDB <noreply@mooreventi.com>',
+            from: 'KSDB <noreply@resend.kevinleoni.org>',
             to: email,
             replyTo: 'kevinservdb@gmail.com',
             subject: `Email Verify Code: ${code}`,

@@ -72,7 +72,7 @@ router.post('/email', async (req, res) => {
 
         // Configura il messaggio di posta elettronica
         const mail = {
-            from: 'KSDB <noreply@mooreventi.com>',
+            from: 'KSDB <noreply@resend.kevinleoni.org>',
             to: email,
             replyTo: 'kevinservdb@gmail.com',
             subject: `${name} ${surname} - Sent you an invite code to KS-debt`,

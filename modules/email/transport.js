@@ -9,7 +9,7 @@ const pass = process.env.EMAIL_PASS;
 
 // Configura il trasportatore
 const EmailSender = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
+    host: 'smtp.resend.com',
     port: 465,
     auth: {
         user, pass
